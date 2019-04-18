@@ -8,8 +8,8 @@ var margin = {
   right: 40
 };
 
-var width = w - margin.left - margin.right;
-var height = h - margin.top - margin.bottom;
+let width = w - margin.left - margin.right;
+let height = h - margin.top - margin.bottom;
 
 // define map projection
 let projection = d3.geoMercator()
@@ -31,18 +31,19 @@ let svg = d3.select("#map")
 let date = Date.now();
 let APIurl = "https://kawal-c1.appspot.com/api/c/0?" + date;
 let lengthOfData;
+let jsonFeatures;
 
 d3.json(APIurl, function(error, data) {
 
   lengthOfData = data["children"].length;
 
-  d3.json("src/assets/json/indonesia.json", function(error, json) {
+  d3.json("src/assets/json/indonesia.json", function(error, id) {
 
     if (error) {
       return console.log(error);
     }
 
-    for (let i = 0; i< lengthOfData; i++) {
+    for (let i = 0; i< lengthOfData-1; i++) {
       // the key to GET the election result data
       let provinceID = data["children"][i][0];
       let provinceName = data["children"][i][1];
@@ -64,20 +65,54 @@ d3.json(APIurl, function(error, data) {
       // The amount of votes that is considered invalid
       let invalid = data["data"][provinceID]["sum"]["tSah"];
 
-      console.log(json.features.length);
+      jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
-      for (let j = 0; i < json.features.length; j++) {
-        let provinceNameJSON = json["features"][1]["properties"]["Propinsi"];
 
-        if (provinceNameJSON == 
+      for (let j = 0; i < jsonFeatures.length; j++) {
+
+        let provinceNameJSON;
+        if (jsonFeatures[j]["properties"]["name"] == null) {
+            continue;
+        } else {
+            provinceNameJSON = jsonFeatures[j]["properties"]["name"];
+        }
+
+        if (provinceNameJSON.toLowerCase() == provinceName.toLowerCase()) {
+
+
+          jsonFeatures[j]["properties"]["provinceTPSNo"] = provinceTPSNo;
+
+          jsonFeatures[j]["properties"]["candidateOne"] = candidateOne;
+
+          jsonFeatures[j]["properties"]["candidateTwo"] = candidateTwo;
+
+          jsonFeatures[j]["properties"]["valid"] = valid;
+
+          jsonFeatures[j]["properties"]["invalid"] = invalid;
+
+          break;
+        }
       }
 
     }
+
+    console.log(jsonFeatures[3]);
   
-    svg.selectAll("path")
-        .data(json.features)
+    svg.selectAll(".province")
+        .data(jsonFeatures)
         .enter()
         .append("path")
         .attr("d", path)
+        .attr("class", "province")
+        .attr("id", d => {
+          return d["properties"]["postal"];
+        })
+        .style("fill", d => {
+          if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
+            return "red";
+          } else {
+            return "orange";
+          }
+        })
   })
 })
