@@ -41,7 +41,11 @@ let jsonFeatures;
 let candidateOneTotal = 0; 
 let candidateTwoTotal = 0;
 let validTotal = 0;
-let invalidTotal = 0
+let invalidTotal = 0;
+let TPSTotal = 0;
+let receivedTPSTotal = 0;
+let unprocessedTPSTotal = 0;
+let errorTPSTotal = 0;
 
 // Scale the color using vote percentage as range for Jokowi Maruf
 let candidateOneColor = d3.scaleLinear()
@@ -75,10 +79,23 @@ d3.json(APIurl, function(error, data) {
       let provinceID = data["children"][i][0];
       let provinceName = data["children"][i][1];
 
-      // Number of TPS all over the provinces
+      // Number of TPS all over the provinces (according to KPU)
       let provinceTPSNo = data["children"][i][2];
+      TPSTotal += provinceTPSNo;
 
       // ELECTION RESULT DATA STARTS HERE
+
+      // Received TPS data including the number of unprocessed ones
+      let receivedTPS = data["data"][provinceID]["sum"]["cakupan"];
+      receivedTPSTotal += receivedTPS;
+
+      // Unprocessed TPS
+      let unprocessedTPS = data["data"][provinceID]["sum"]["pending"];
+      unprocessedTPSTotal += unprocessedTPS;
+
+      // Error TPS
+      let errorTPS = data["data"][provinceID]["sum"]["error"];
+      errorTPSTotal += errorTPS;
 
       // The amount of votes that the 1st candidate received
       let candidateOne = data["data"][provinceID]["sum"]["pas1"];
@@ -114,6 +131,12 @@ d3.json(APIurl, function(error, data) {
             jsonFeatures[j]["properties"]["provinceID"] = provinceID;
 
             jsonFeatures[j]["properties"]["provinceTPSNo"] = provinceTPSNo;
+
+            jsonFeatures[j]["properties"]["receivedTPS"] = receivedTPS;
+
+            jsonFeatures[j]["properties"]["unprocessedTPS"] = unprocessedTPS;
+
+            jsonFeatures[j]["properties"]["errorTPS"] = errorTPS;
 
             jsonFeatures[j]["properties"]["candidateOne"] = candidateOne;
 
@@ -170,7 +193,22 @@ d3.json(APIurl, function(error, data) {
       .text(() => {
         return (candidateTwoTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2) + "%"
       })
-    
+
+    d3.select("#received-TPS")
+      .text(() => {
+        return receivedTPSTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " (" + (receivedTPSTotal/TPSTotal * 100).toFixed(2) +  "%)";
+      })
+
+    d3.select("#unprocessed-TPS")
+    .text(() => {
+      return unprocessedTPSTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    })
+
+    d3.select("#error-TPS")
+    .text(() => {
+      return errorTPSTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    })
+
     svg.selectAll(".province")
         .data(jsonFeatures)
         .enter()
@@ -182,7 +220,6 @@ d3.json(APIurl, function(error, data) {
         })
         .style("fill", d => {
           if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
-            console.log(candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"])));
             return candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]));
           } else {
             return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
@@ -211,24 +248,24 @@ d3.json(APIurl, function(error, data) {
         .on("mousemove", () => {
             tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
         })
-        .on("click", d => {
+        // .on("click", d => {
 
-          let provinceID = d["properties"]["provinceID"];
-          let url = `https://kawal-c1.appspot.com/api/c/${provinceID}?${date}`;
-          let jsonFile = `src/assets/json/provinces/${provinceID}.json`
+        //   let provinceID = d["properties"]["provinceID"];
+        //   let url = `https://kawal-c1.appspot.com/api/c/${provinceID}?${date}`;
+        //   let jsonFile = `src/assets/json/provinces/${provinceID}.json`
 
-          let panel = d3.select("#map")
-                        .append("div")
-                        .attr("id", "window-panel")
+        //   let panel = d3.select("#map")
+        //                 .append("div")
+        //                 .attr("id", "window-panel")
 
-          d3.json(jsonFile, function(error, id) {
+        //   d3.json(jsonFile, function(error, id) {
 
-            if (error) {
-              return console.log(error);
-            }
+        //     if (error) {
+        //       return console.log(error);
+        //     }
 
-          })
+        //   })
             
-        })
+        // })
   })
 })
