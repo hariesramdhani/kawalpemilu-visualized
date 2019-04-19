@@ -1,7 +1,7 @@
 let w = 1200,
     h = 400;
 
-var margin = {
+let margin = {
   top: 60,
   bottom: 40,
   left: 70,
@@ -10,6 +10,12 @@ var margin = {
 
 let width = w - margin.left - margin.right;
 let height = h - margin.top - margin.bottom;
+
+let tooltip = d3.select("#map")
+                .append("div")
+                .style("position", "fixed")
+                .style("z-index", 1)
+                .style("visibility", "hidden");;
 
 // define map projection
 let projection = d3.geoMercator()
@@ -32,6 +38,10 @@ let date = Date.now();
 let APIurl = "https://kawal-c1.appspot.com/api/c/0?" + date;
 let lengthOfData;
 let jsonFeatures;
+let candidateOneTotal = 0; 
+let candidateTwoTotal = 0;
+let validTotal = 0;
+let invalidTotal = 0
 
 d3.json(APIurl, function(error, data) {
 
@@ -43,7 +53,7 @@ d3.json(APIurl, function(error, data) {
       return console.log(error);
     }
 
-    for (let i = 0; i< lengthOfData-1; i++) {
+    for (let i = 0; i< lengthOfData; i++) {
       // the key to GET the election result data
       let provinceID = data["children"][i][0];
       let provinceName = data["children"][i][1];
@@ -55,49 +65,71 @@ d3.json(APIurl, function(error, data) {
 
       // The amount of votes that the 1st candidate received
       let candidateOne = data["data"][provinceID]["sum"]["pas1"];
+      candidateOneTotal += candidateOne;
 
       // The amount of votes that the 2nd candidate received
       let candidateTwo = data["data"][provinceID]["sum"]["pas2"];
+      candidateTwoTotal += candidateTwo;
 
       // The amount of votes that is considered valid
       let valid = data["data"][provinceID]["sum"]["sah"];
+      validTotal += valid;
 
       // The amount of votes that is considered invalid
       let invalid = data["data"][provinceID]["sum"]["tSah"];
+      invalidTotal += invalid;
 
-      jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
+      if (i != lengthOfData - 1) {
+        jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
 
-      for (let j = 0; i < jsonFeatures.length; j++) {
+        for (let j = 0; i < jsonFeatures.length; j++) {
 
-        let provinceNameJSON;
-        if (jsonFeatures[j]["properties"]["name"] == null) {
-            continue;
-        } else {
-            provinceNameJSON = jsonFeatures[j]["properties"]["name"];
+          let provinceNameJSON;
+          if (jsonFeatures[j]["properties"]["name"] == null) {
+              continue;
+          } else {
+              provinceNameJSON = jsonFeatures[j]["properties"]["name"];
+          }
+
+          if (provinceNameJSON.toLowerCase() == provinceName.toLowerCase()) {
+
+
+            jsonFeatures[j]["properties"]["provinceTPSNo"] = provinceTPSNo;
+
+            jsonFeatures[j]["properties"]["candidateOne"] = candidateOne;
+
+            jsonFeatures[j]["properties"]["candidateTwo"] = candidateTwo;
+
+            jsonFeatures[j]["properties"]["valid"] = valid;
+
+            jsonFeatures[j]["properties"]["invalid"] = invalid;
+
+            break;
+          }
         }
 
-        if (provinceNameJSON.toLowerCase() == provinceName.toLowerCase()) {
-
-
-          jsonFeatures[j]["properties"]["provinceTPSNo"] = provinceTPSNo;
-
-          jsonFeatures[j]["properties"]["candidateOne"] = candidateOne;
-
-          jsonFeatures[j]["properties"]["candidateTwo"] = candidateTwo;
-
-          jsonFeatures[j]["properties"]["valid"] = valid;
-
-          jsonFeatures[j]["properties"]["invalid"] = invalid;
-
-          break;
-        }
       }
-
     }
 
-    console.log(jsonFeatures[3]);
-  
+    console.log(candidateOneTotal);
+
+    d3.select("#jokomaruf-vote")
+      .text(candidateOneTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    
+    d3.select("#prabowosandi-vote")
+      .text(candidateTwoTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+    d3.select("#jokomaruf-vote-percentage")
+      .text(() => {
+        return (candidateOneTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2) + "%"
+      })
+    
+    d3.select("#prabowosandi-vote-percentage")
+      .text(() => {
+        return (candidateTwoTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2) + "%"
+      })
+    
     svg.selectAll(".province")
         .data(jsonFeatures)
         .enter()
@@ -115,5 +147,27 @@ d3.json(APIurl, function(error, data) {
           }
         })
         .style('stroke', 'black')
+        .on("mouseover", (d) => {
+
+          let tempTotal = d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]
+          let tempCandidateOnePercentage = ((d["properties"]["candidateOne"] / tempTotal) * 100).toFixed(2)
+          let tempCandidateTwoPercentage = ((d["properties"]["candidateTwo"] / tempTotal) * 100).toFixed(2)
+
+          tooltip.html(`
+            <div class="tooltip">
+              <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+              <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"]}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"]}</span></p><br/>
+              <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
+            </div>
+          `)
+
+          tooltip.style("visibility", "visible");
+        })
+        .on("mouseout", () => {
+            tooltip.style("visibility", "hidden");
+        })
+        .on("mousemove", () => {
+            tooltip.style("top", (d3.event.clientY - 80) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+        })
   })
 })
