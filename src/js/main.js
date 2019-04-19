@@ -43,6 +43,12 @@ let candidateTwoTotal = 0;
 let validTotal = 0;
 let invalidTotal = 0
 
+d3.select("#last-update")
+  .text(() => {
+    let time = new Date().toLocaleTimeString();
+    return time;
+  })
+
 d3.json(APIurl, function(error, data) {
 
   lengthOfData = data["children"].length;
@@ -114,6 +120,31 @@ d3.json(APIurl, function(error, data) {
 
     console.log(candidateOneTotal);
 
+    d3.select("#total-votes")
+      .text(() => {
+        return (validTotal + invalidTotal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      })
+
+    d3.select("#valid-votes")
+      .text(() => {
+        return validTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      })
+
+    d3.select("#valid-votes-percentage")
+      .text(() => {
+        return (validTotal / (validTotal + invalidTotal) * 100).toFixed(2) + "%";
+      })
+    
+    d3.select("#invalid-votes-percentage")
+      .text(() => {
+        return (invalidTotal / (validTotal + invalidTotal) * 100).toFixed(2) + "%";
+      })
+    
+    d3.select("#invalid-votes")
+      .text(() => {
+        return invalidTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      })
+
     d3.select("#jokomaruf-vote")
       .text(candidateOneTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     
@@ -167,7 +198,7 @@ d3.json(APIurl, function(error, data) {
             tooltip.style("visibility", "hidden");
         })
         .on("mousemove", () => {
-            tooltip.style("top", (d3.event.clientY - 80) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+            tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
         })
   })
 })
