@@ -43,6 +43,17 @@ let candidateTwoTotal = 0;
 let validTotal = 0;
 let invalidTotal = 0
 
+// Scale the color using vote percentage as range for Jokowi Maruf
+let candidateOneColor = d3.scaleLinear()
+                          .domain([.5, .6, .7, .8, .9])
+                          .range(["#E05F6B", "#DD4F5D", "#C94855", "#B5414D", "#A13A44"])
+
+// Scale the color using vote percentage as range for Prabowo Sandi
+let candidateTwoColor = d3.scaleLinear()
+                          .domain([.5, .6, .7, .8, .9])
+                          .range(["#85B4DF", "#79ADDC", "#6E9EC8", "#648EB5", "#597EA1"])
+
+
 d3.select("#last-update")
   .text(() => {
     let time = new Date().toLocaleTimeString();
@@ -118,8 +129,6 @@ d3.json(APIurl, function(error, data) {
       }
     }
 
-    console.log(candidateOneTotal);
-
     d3.select("#total-votes")
       .text(() => {
         return (validTotal + invalidTotal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -172,9 +181,10 @@ d3.json(APIurl, function(error, data) {
         })
         .style("fill", d => {
           if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
-            return "#DD4F5D";
+            console.log(candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"])));
+            return candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]));
           } else {
-            return "#79ADDC";
+            return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
           }
         })
         .style('stroke', 'black')

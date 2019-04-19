@@ -32,16 +32,8 @@ body {
     vertical-align: middle;
 }
 
-h1 {
+h1, h3, p {
     margin: 0px;
-}
-
-h3 {
-    margin: 0px;
-}
-
-p {
-    margin: 0;
 }
 
 .tooltip {
