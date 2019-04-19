@@ -109,10 +109,11 @@ d3.json(APIurl, function(error, data) {
         })
         .style("fill", d => {
           if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
-            return "red";
+            return "#DD4F5D";
           } else {
-            return "orange";
+            return "#79ADDC";
           }
         })
+        .style('stroke', 'black')
   })
 })

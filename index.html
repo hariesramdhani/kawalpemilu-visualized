@@ -45,12 +45,55 @@
         body {
             font-family: "Source Sans Pro";
             text-align: center;
+            background-color: #FFF4BA;
+        }
+
+        .container {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .vote-container {
+            padding: 0 50px;
+            display: inline-block;
+        }
+        .vote-description {
+            padding: 0 10px;
+            margin: -30px 0;
+            display: inline-block;
+        }
+
+        h1 {
+            margin: -10 0 10px 0;
+        }
+
+        h3 {
+            margin: 0px;
+            padding: 0px;
         }
     </style>
 
 </head>
 <body>
-    <h1>TESTYASTAYSTAYTSYA</h1>
+    <h1>KawalPemilu Visualized</h1>
+    <div class="container" style="width: 1200px; text-align: center; margin: 0 auto;">
+        <div class="vote-container">
+            <img src="/src/assets/img/jokowi_maruf.png" style="width: 200px;">
+            <div class="vote-description">
+                <h1>JOKOWI-MA'RUF</h1>
+                <h3 style="margin: 10px 0 0 0;" id="jokomaruf-vote">78217</h3>
+                <h3 style="margin: 0 0 10px 0;" id="jokomaruf-vote-percentage">78%</h3>
+            </div>
+        </div>
+        <div class="vote-container">
+            <img src="/src/assets/img/prabowo_sandi.png" style="width: 200px;">
+            <div class="vote-description">
+                <h1>PRABOWO-SANDI</h1>
+                <h3 id="jokomaruf-vote">78217</h3>
+                <h3 style="margin: 0 0 10px 0;" id="jokomaruf-vote-percentage">78%</h3>
+            </div>
+        </div>
+    </div>
     <div id="map" style="text-align: center;">
 
     </div>
