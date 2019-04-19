@@ -70,7 +70,7 @@ a {
     width: 35px; 
     padding: 5px; 
     border: 0; 
-    display: inline; 
+    display: inline-block; 
     margin: 0;
 }
 
