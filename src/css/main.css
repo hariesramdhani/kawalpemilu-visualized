@@ -2,6 +2,7 @@ body {
     font-family: "Source Sans Pro", sans-serif;
     text-align: center;
     background-color: #FFF4BA;
+    padding: 30px 30px 10px 30px;
 }
 
 .container {
@@ -72,3 +73,23 @@ a {
     display: inline; 
     margin: 0;
 }
+
+#map {
+    text-align: center;
+    margin: 0 auto;
+    width: 1200px;
+    height: 400px;
+}
+
+/* #window-panel {
+    border-radius: 8px;
+    opacity: 0.6;
+    height: 80%;
+    width: 80%;
+    top: 10%;
+    left: 10%;
+    bottom: 10%;
+    background-color: black;
+    position: fixed;
+
+} */

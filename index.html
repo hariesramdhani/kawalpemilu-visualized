@@ -14,7 +14,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>KawalPemilu Visualized</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <meta name="author" content="Haries Ramdhani">
     <meta name="description" content="A data visualization of the result of Indonesia's recent election built with D3.js and KawalPemilu API">
     <link rel="shortcut icon" type="image/png" href="src/assets/img/favicon.png" />
@@ -42,7 +42,7 @@
 
 </head>
 <body>
-    <div class="container" style="padding: 30px 30px 10px 30px;">
+    <div class="container">
         <div class="ballot-container">
             <img src="src/assets/img/valid.png" style="width: 100px;">
             <div class="validity-description">
@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <div class="container" style="padding: 0 30px 30px 30px;">
+    <div class="container">
         <div class="vote-container">
             <img src="src/assets/img/jokowi_maruf.png" style="width: 200px;">
             <div class="vote-description">
@@ -91,12 +91,14 @@
     
     <div id="map" style="text-align: center; margin-bottom: 40px;">
     </div>
-    <div id="share-buttons"> 
+    
+    <div class="container">
+        <div id="share-buttons"> 
             <a href="https://www.facebook.com/sharer.php?u=https://hariesramdhani.github.io/kawalpemilu-visualized" target="_blank"><img src="src/assets/img/share/facebook.png" alt="Facebook" /></a>
             <a href="https://twitter.com/share?url=https://hariesramdhani.github.io/kawalpemilu-visualized&text=KawalPemilu Visualized" target="_blank"><img src="src/assets/img/share/twitter.png" alt="Twitter" /></a>
         </div>
-
-    <p>Built using D3.js and <a href="http://kawalpemilu.org">KawalPemilu</a> API by <a href="http://twitter.com/harieesss">Haries Ramdhani</a>.</p>
+        <p text-align: center;">Built using D3.js and <a href="http://kawalpemilu.org">KawalPemilu</a> API by <a href="http://twitter.com/harieesss">Haries Ramdhani</a>.</p>
+    </div>
             
     <script type="module" src="src/js/main.js"></script>
 </body>

@@ -111,6 +111,7 @@ d3.json(APIurl, function(error, data) {
 
           if (provinceNameJSON.toLowerCase() == provinceName.toLowerCase()) {
 
+            jsonFeatures[j]["properties"]["provinceID"] = provinceID;
 
             jsonFeatures[j]["properties"]["provinceTPSNo"] = provinceTPSNo;
 
@@ -188,7 +189,7 @@ d3.json(APIurl, function(error, data) {
           }
         })
         .style('stroke', 'black')
-        .on("mouseover", (d) => {
+        .on("mouseover", d => {
 
           let tempTotal = d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]
           let tempCandidateOnePercentage = ((d["properties"]["candidateOne"] / tempTotal) * 100).toFixed(2)
@@ -209,6 +210,25 @@ d3.json(APIurl, function(error, data) {
         })
         .on("mousemove", () => {
             tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+        })
+        .on("click", d => {
+
+          let provinceID = d["properties"]["provinceID"];
+          let url = `https://kawal-c1.appspot.com/api/c/${provinceID}?${date}`;
+          let jsonFile = `src/assets/json/provinces/${provinceID}.json`
+
+          let panel = d3.select("#map")
+                        .append("div")
+                        .attr("id", "window-panel")
+
+          d3.json(jsonFile, function(error, id) {
+
+            if (error) {
+              return console.log(error);
+            }
+
+          })
+            
         })
   })
 })
