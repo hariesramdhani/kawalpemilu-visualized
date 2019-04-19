@@ -42,7 +42,7 @@
 
 </head>
 <body>
-    <div class="container" style="padding: 30px;">
+    <div class="container" style="padding: 30px 30px 10px 30px;">
         <div class="ballot-container">
             <img src="src/assets/img/valid.png" style="width: 100px;">
             <div class="validity-description">
@@ -56,7 +56,8 @@
             <div class="ballot-description">
                 <!-- <h3>TOTAL SUARA MASUK</h3> -->
                 <h1 style="font-size: 75px;" id="total-votes">0</h1>
-                <p style="font-size: 20px;">votes</p>
+                <p style="font-size: 25px; font-weight: bold;">SUARA</p>
+                <p>Update terakhir pada <span id="last-update"></span></p>
             </div>
         </div>
         <div class="ballot-container">
@@ -90,8 +91,11 @@
     
     <div id="map" style="text-align: center; margin-bottom: 40px;">
     </div>
+    <div id="share-buttons"> 
+            <a href="https://www.facebook.com/sharer.php?u=https://hariesramdhani.github.io/kawalpemilu-visualized" target="_blank"><img src="src/assets/img/share/facebook.png" alt="Facebook" /></a>
+            <a href="https://twitter.com/share?url=https://hariesramdhani.github.io/kawalpemilu-visualized&text=KawalPemilu Visualized" target="_blank"><img src="src/assets/img/share/twitter.png" alt="Twitter" /></a>
+        </div>
 
-    <p>Last Updated at <span id="last-update"></span></p>
     <p>Built using D3.js and <a href="http://kawalpemilu.org">KawalPemilu</a> API by <a href="http://twitter.com/harieesss">Haries Ramdhani</a>.</p>
             
     <script type="module" src="src/js/main.js"></script>
