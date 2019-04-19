@@ -3,122 +3,46 @@
 <head>
 
     <!-- Google Analytics -->
-    <script>
+    <!-- <script>
         window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
         ga('create', 'UA-136102323-1', 'auto');
         ga('send', 'pageview');
         </script>
-    <script async src='https://www.google-analytics.com/analytics.js'></script>
+    <script async src='https://www.google-analytics.com/analytics.js'></script> -->
 
     <!-- Meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Election Results</title>
+    <title>KawalPemilu Visualized</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Haries Ramdhani">
-    <meta name="description" content="">
-    <link rel="shortcut icon" type="image/png" href="/src/assets/img/favicon.png" />
+    <meta name="description" content="A data visualization of the result of Indonesia's recent election built with D3.js and KawalPemilu API">
+    <link rel="shortcut icon" type="image/png" href="src/assets/img/favicon.png" />
 
-    <!-- <meta property="og:image" content="https://raw.githubusercontent.com/hariesramdhani/competition-after-competition/master/handle.png">
-    <meta property="og:description" content=".">
-    <meta property="og:title" content=""> -->
+    <meta property="og:image" content="https://raw.githubusercontent.com/hariesramdhani/kawalpemilu-visualized/master/src/assets/img/twitter_card.png">
+    <meta property="og:description" content="A data visualization of the result of Indonesia's recent election built with D3.js and KawalPemilu API">
+    <meta property="og:title" content="KawalPemilu Visualized">
 
     <!--Twitter-->
-    <!-- <meta name="twitter:title" content="">
-    <meta name="twitter:description" content="">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/hariesramdhani/competition-after-competition/master/handle.png">
-    <meta name="twitter:card" content="summary_large_image"> -->
+    <meta name="twitter:title" content="KawalPemilu Visualized">
+    <meta name="twitter:description" content="A data visualization of the result of Indonesia's recent election built with D3.js and KawalPemilu API">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/hariesramdhani/kawalpemilu-visualized/master/src/assets/img/twitter_card.png">
+    <meta name="twitter:card" content="summary_large_image">
 
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
     <!-- CSS -->
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="src/css/main.css"> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="src/css/main.css">
 
     <!-- Scripts -->
     <script type="text/javascript" src="src/assets/scripts/d3.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
 
-
-    <style>
-        body {
-            font-family: "Source Sans Pro";
-            text-align: center;
-            background-color: #FFF4BA;
-        }
-
-        .container {
-            display: inline-block;
-            margin: 0;
-        }
-
-        .vote-container {
-            padding: 0 50px;
-            display: inline-block;
-        }
-
-        .ballot-container {
-            padding: 0 0px;
-            display: inline-block;
-        }
-
-        .vote-description {
-            padding: 0 10px;
-            margin: 0px 0;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .vote-container img {
-            vertical-align: middle;
-        }
-
-        h1 {
-            margin: 0px;
-        }
-
-        h3 {
-            margin: 0px;
-        }
-
-        p {
-            margin: 0;
-        }
-
-        .tooltip {
-            text-align: left;
-            font-family: monospace;
-            font-size: 10pt;
-            color: #000;
-            position: relative;
-            background: rgba(255, 255, 255, 0.8);
-            /* border: 4px solid #BAD9A2; */
-            padding: 10px;
-            border-radius: 8px ;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
-            border-bottom-left-radius: 8px;
-            width: 150px; 
-            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
-            vertical-align: middle;
-        }
-
-        .ballot-container {
-            vertical-align: middle;
-            padding: 0 30px;
-        }
-
-        .validity-description {
-            /* display: inline-block; */
-            /* vertical-align: middle; */
-        }
-    </style>
-
 </head>
 <body>
-    <div class="container" style="padding: 30px; width: 1200px; text-align: center; margin: 0 auto;">
+    <div class="container" style="padding: 30px;">
         <div class="ballot-container">
             <img src="src/assets/img/valid.png" style="width: 100px;">
             <div class="validity-description">
@@ -145,7 +69,7 @@
         </div>
     </div>
 
-    <div class="container" style="padding: 0 30px 30px 30px; width: 1200px; text-align: center; margin: 0 auto;">
+    <div class="container" style="padding: 0 30px 30px 30px;">
         <div class="vote-container">
             <img src="src/assets/img/jokowi_maruf.png" style="width: 200px;">
             <div class="vote-description">
@@ -168,7 +92,7 @@
     </div>
 
     <p>Last Updated at <span id="last-update"></span></p>
-    <p>Made with D3.js and KawalPemilu API.</p>
+    <p>Made with D3.js and <a href="http://kawalpemilu.org">KawalPemilu</a> API by <a href="http://twitter.com/harieesss">Haries Ramdhani</a>.</p>
             
     <script type="module" src="src/js/main.js"></script>
 </body>
