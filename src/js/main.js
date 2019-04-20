@@ -76,7 +76,7 @@ d3.json(APIurl, function(error, data) {
       return console.log(error);
     }
 
-    for (let i = 0; i< lengthOfData - 1; i++) {
+    for (let i = 0; i< lengthOfData; i++) {
       // the key to GET the election result data
       let provinceID = data["children"][i][0];
       let provinceName = data["children"][i][1];
