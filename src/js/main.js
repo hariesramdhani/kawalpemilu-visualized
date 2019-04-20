@@ -49,6 +49,8 @@ let receivedTPSTotal = 0;
 let unprocessedTPSTotal = 0;
 let errorTPSTotal = 0;
 
+let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
 // Scale the color using vote percentage as range for Jokowi Maruf
 let candidateOneColor = d3.scaleLinear()
                           .domain([.5, .6, .7, .8, .9])
@@ -62,7 +64,8 @@ let candidateTwoColor = d3.scaleLinear()
 
 d3.select("#last-update")
   .text(() => {
-    let time = new Date().toLocaleTimeString();
+    let lastUpdateTime = new Date();
+    let time = lastUpdateTime.toLocaleDateString('id-ID', options) + " " + lastUpdateTime.toLocaleTimeString();
     return time;
   })
 
@@ -235,7 +238,7 @@ d3.json(APIurl, function(error, data) {
           tooltip.html(`
             <div class="tooltip">
               <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
-              <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"]}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"]}</span></p><br/>
+              <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span></p><br/>
               <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
             </div>
           `)
