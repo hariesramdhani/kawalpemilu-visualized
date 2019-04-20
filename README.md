@@ -1,6 +1,6 @@
 # KawalPemilu Visualized
 ![KawalPemilu Visualized](https://raw.githubusercontent.com/hariesramdhani/kawalpemilu-visualized/master/src/assets/img/docs/visualization.png)
-KawalPemilu Visualized is a data visualization of the result of Indonesia's recent election built with D3.js and KawalPemilu API. (For more information about KawalPemilu please visit kawalpemilu.org).
+KawalPemilu Visualized is a data visualization of the result of Indonesia's recent election built with D3.js and KawalPemilu API. KawalPemilu Visualized is a static web page and the data visualizations are rendered on the client-side. (For more information about KawalPemilu please visit kawalpemilu.org).
 
 #### KawalPemilu API Information
 KawalPemilu API can be accessed via
