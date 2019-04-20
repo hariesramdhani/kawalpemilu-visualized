@@ -242,7 +242,6 @@ d3.json(APIurl, function(error, data) {
 
       let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
       
-      console.log(legislative[legMax]);
 
       if (legislative[legMax] == undefined) {
         legMax = "NONE";
@@ -420,6 +419,9 @@ d3.json(APIurl, function(error, data) {
         .on("mousemove", () => {
             tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
         })
+
+        // REGENCIES AND CITIES VISUALIZATION ON CLICK
+
         // .on("click", d => {
 
         //   let provinceID = d["properties"]["provinceID"];
