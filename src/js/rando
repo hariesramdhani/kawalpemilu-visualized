@@ -1,0 +1,3 @@
+// PKP
+      let LegPKP = data["data"][provinceID]["sum"]["pkp"];
+      legislativeTotal["PKP"] += LegPKP;

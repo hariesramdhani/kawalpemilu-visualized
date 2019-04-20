@@ -49,6 +49,27 @@ let receivedTPSTotal = 0;
 let unprocessedTPSTotal = 0;
 let errorTPSTotal = 0;
 
+let legislativeTotal = {
+  "PKB": 0,
+  "GER": 0,
+  "PDI": 0,
+  "GOL": 0,
+  "NAS": 0,
+  "GAR": 0,
+  "BER": 0,
+  "PKS": 0,
+  "PER": 0,
+  "PPP": 0,
+  "PSI": 0,
+  "PAN": 0,
+  "HAN": 0,
+  "DEM": 0,
+  "PBB": 0,
+  "PKP": 0,
+}
+
+let parties = ["PKB", "GER", "PDI", "GOL", "NAS", "GAR", "BER", "PKS", "PER", "PPP", "PSI", "PAN", "HAN", "DEM", "PBB", "PKP"];
+
 let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 // Scale the color using vote percentage as range for Jokowi Maruf
@@ -117,6 +138,109 @@ d3.json(APIurl, function(error, data) {
       // The amount of votes that is considered invalid
       let invalid = data["data"][provinceID]["sum"]["tSah"];
       invalidTotal += invalid;
+
+      // LEGISLATIVE DATA STARTS HERE
+
+      let legislative = {
+        "PKB": 0,
+        "GER": 0,
+        "PDI": 0,
+        "GOL": 0,
+        "NAS": 0,
+        "GAR": 0,
+        "BER": 0,
+        "PKS": 0,
+        "PER": 0,
+        "PPP": 0,
+        "PSI": 0,
+        "PAN": 0,
+        "HAN": 0,
+        "DEM": 0,
+        "PBB": 0,
+        "PKP": 0,
+      }
+
+      parties.forEach(function(party) {
+        
+        if (party == "PKS") {
+          legislative[party] = data["data"][provinceID]["sum"]["sej"];  
+        } else {
+          legislative[party] = data["data"][provinceID]["sum"][party.toLowerCase()];
+        }
+
+        if (legislative[party] != undefined) {
+          legislativeTotal[party] += legislative[party];  
+        }
+      })
+
+
+      // // PKB
+      // legislative["PKB"] = data["data"][provinceID]["sum"]["pkb"];
+      // legislativeTotal["PKB"] += legislative["PKB"];
+
+      // // GERINDRA
+      // legislative["GER"] = data["data"][provinceID]["sum"]["ger"];
+      // legislativeTotal["GER"] += legislative["GER"];
+
+      // // PDI
+      // legislative["PDI"] = data["data"][provinceID]["sum"]["pdi"];
+      // legislativeTotal["PDI"] += legislative["PDI"];
+
+      // // GOLKAR
+      // legislative["GOL"] = data["data"][provinceID]["sum"]["gol"];
+      // legislativeTotal["GOL"] += legislative["GOL"];
+
+      // // NASDEM
+      // legislative["NAS"] = data["data"][provinceID]["sum"]["nas"];
+      // legislativeTotal["NAS"] += legNAS;
+
+      // // GARUDA
+      // legislative["GAR"] = data["data"][provinceID]["sum"]["gar"];
+      // legislativeTotal["GAR"] += legGAR;
+
+      // // BERKARYA
+      // legislative["BER"] = data["data"][provinceID]["sum"]["ber"];
+      // legislativeTotal["BER"] += legBER;
+
+      // // PKS
+      // legislative["PKS"] = data["data"][provinceID]["sum"]["pks"];
+      // legislativeTotal["PKS"] += legPKS;
+
+      // // PERINDO
+      // legislative["PER"] = data["data"][provinceID]["sum"]["per"];
+      // legislativeTotal["PER"] += legPER;
+
+      // // PPP
+      // legislative["PPP"] = data["data"][provinceID]["sum"]["ppp"];
+      // legislativeTotal["PPP"] += legPPP;
+
+      // // PSI
+      // legislative["PSI"] = data["data"][provinceID]["sum"]["psi"];
+      // legislativeTotal["PSI"] += legPSI;
+
+      // // PAN
+      // legislative["PAN"] = data["data"][provinceID]["sum"]["pan"];
+      // legislativeTotal["PAN"] += legPAN;
+
+      // // HANURA
+      // legislative["HAN"] = data["data"][provinceID]["sum"]["han"];
+      // legislativeTotal["HAN"] += legHAN;
+
+      // // DEMOKRAT
+      // legislative["DEM"] = data["data"][provinceID]["sum"]["dem"];
+      // legislativeTotal["DEM"] += legDEM;
+
+      // // PBB
+      // legislative["PBB"] = data["data"][provinceID]["sum"]["pbb"];
+      // legislativeTotal["PBB"] += legPBB;
+
+      // // PKP
+      // legislative["PKP"] = data["data"][provinceID]["sum"]["pkp"];
+      // legislativeTotal["PKP"] += legPKP;
+
+      let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
+
+
       if (i < lengthOfData - 2) {
         jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
@@ -149,12 +273,66 @@ d3.json(APIurl, function(error, data) {
 
             jsonFeatures[j]["properties"]["invalid"] = invalid;
 
+            // LEGISLATIVE VOTES
+
+            parties.forEach(function(party) {
+              jsonFeatures[j]["properties"][party] = legislative[party];
+            });
+
+            jsonFeatures[j]["properties"]["legMax"] = legMax;
+
+            // jsonFeatures[j]["properties"]["GER"] = legislative["GER"]
+            // jsonFeatures[j]["properties"]["PDI"] = legislative["PDI"]
+            // jsonFeatures[j]["properties"]["GOL"] = legGOL;
+            // jsonFeatures[j]["properties"]["NAS"] = legNAS;
+            // jsonFeatures[j]["properties"]["GAR"] = legGAR;
+            // jsonFeatures[j]["properties"]["BER"] = legBER;
+            // jsonFeatures[j]["properties"]["PKS"] = legPKS;
+            // jsonFeatures[j]["properties"]["PER"] = legPER;
+            // jsonFeatures[j]["properties"]["PPP"] = legPPP;
+            // jsonFeatures[j]["properties"]["PSI"] = legPSI;
+            // jsonFeatures[j]["properties"]["PAN"] = legPAN;
+            // jsonFeatures[j]["properties"]["HAN"] = legHAN;
+            // jsonFeatures[j]["properties"]["DEM"] = legDEM;
+            // jsonFeatures[j]["properties"]["PBB"] = legPBB;
+            // jsonFeatures[j]["properties"]["PKP"] = legPKP;
+
             break;
           }
         }
 
       }
     }
+
+    let legVoteMax = Object.keys(legislativeTotal).reduce(function(m, k){ return legislativeTotal[k] > m ? legislativeTotal[k] : m }, -Infinity); 
+    let legVoteMin = Object.keys(legislativeTotal).reduce(function(m, k){ return legislativeTotal[k] < m ? legislativeTotal[k] : m }, Infinity); 
+
+    let legVoteLogScale = d3.scalePow()
+                            .domain([legVoteMin, legVoteMax])
+                            .range([40, 80]);
+
+    parties.forEach(function(party) {
+      d3.select(`#${party}-icon`)
+        .style("width", () => {
+          return legVoteLogScale(legislativeTotal[party]) + "px";
+        })
+    });            
+
+    parties.forEach(function(party) {
+      d3.select(`#${party}-vote`)
+        .text(() => {
+          return legislativeTotal[party].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        })
+    });
+  
+    let legislativeTotalSum = Object.values(legislativeTotal).reduce((a, b) => a + b);
+    parties.forEach(function(party) {
+      d3.select(`#${party}-vote-percentage`)
+        .text(() => {
+          return `${(legislativeTotal[party]/legislativeTotalSum * 100).toFixed(2)}%`;
+        })
+    });
+
 
     d3.select("#total-votes")
       .text(() => {
@@ -303,6 +481,112 @@ d3.json(APIurl, function(error, data) {
         //   })
             
         // })
+
+
+      d3.select("#legislative-election")
+        .on("click", function(){
+
+          d3.select("#legislative-election")
+            .style("background-color", "#B3A395");
+
+          d3.select("#presidential-election")
+            .style("background-color", "#DAC6B5");
+  
+          d3.select("#president")
+            .style("display", "none");
+  
+          d3.select("#legislative")
+            .style("display", "block");
+  
+          svg.selectAll(".province")
+            .transition()
+            .duration(1000)
+            .style("fill", d => {
+              if (d["properties"]["legMax"] == "PKB") {
+                return "#358469";
+              } else if (d["properties"]["legMax"] == "GER") {
+                return "#CB6055";
+              } else if (d["properties"]["legMax"] == "PDI") {
+                return "#AF2A2D";
+              } else if (d["properties"]["legMax"] == "GOL") {
+                return "#FAD555";
+              } else if (d["properties"]["legMax"] == "NAS") {
+                return "#DF8842";
+              } else if (d["properties"]["legMax"] == "GAR") {
+                return "#C68E25";
+              } else if (d["properties"]["legMax"] == "BER") {
+                return "#A4C479";
+              } else if (d["properties"]["legMax"] == "PKS") {
+                return "#9B9B9B";
+              } else if (d["properties"]["legMax"] == "PER") {
+                return "#825DBE";
+              } else if (d["properties"]["legMax"] == "PPP") {
+                return "#45563F";
+              } else if (d["properties"]["legMax"] == "PSI") {
+                return "#CA879F";
+              } else if (d["properties"]["legMax"] == "PAN") {
+                return "#9AB6DF";
+              } else if (d["properties"]["legMax"] == "HAN") {
+                return "#A37A86";
+              } else if (d["properties"]["legMax"] == "DEM") {
+                return "#354199";
+              } else if (d["properties"]["legMax"] == "PKP") {
+                return "#7A100F";
+              } else if (d["properties"]["legMax"] == "PBB") {
+                return "#8BAEA1";
+              } else {
+                return "black";
+              }
+            })
+            // .on("mouseover", d => {
+            
+            // })
+      
+        })
+  
+      d3.select("#presidential-election")
+        .on("click", function(){
+
+          d3.select("#legislative-election")
+            .style("background-color", "#DAC6B5");
+
+          d3.select("#presidential-election")
+            .style("background-color", "#B3A395");
+  
+          d3.select("#president")
+            .style("display", "block");
+  
+          d3.select("#legislative")
+            .style("display", "none");
+
+          svg.selectAll(".province")
+            .transition()
+            .duration(1000)
+            .style("fill", d => {
+              if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
+                return candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]));
+              } else {
+                return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
+              }
+            })
+            // .on("mouseover", d => {
+
+            //   let tempTotal = d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]
+            //   let tempCandidateOnePercentage = ((d["properties"]["candidateOne"] / tempTotal) * 100).toFixed(2)
+            //   let tempCandidateTwoPercentage = ((d["properties"]["candidateTwo"] / tempTotal) * 100).toFixed(2)
+    
+            //   tooltip.html(`
+            //     <div class="tooltip">
+            //       <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+            //       <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span></p><br/>
+            //       <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
+            //     </div>
+            //   `)
+    
+            //   tooltip.style("visibility", "visible");
+            // })
+          
+        })
   })
 })
 

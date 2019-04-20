@@ -99,3 +99,33 @@ a {
 .city {
     opacity: 1;
 }
+
+.partai-icon {
+    width: 75px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.partai-container {
+    padding: 0 30px 20px 0;
+    display: inline-block;
+}
+
+.partai-container img {
+    vertical-align: middle;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 30px;
+    margin: 0 20px;
+    font-size: 20px;
+    background-color: #DAC6B5;
+    border: 3px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#legislative {
+    display: none;
+}
