@@ -114,8 +114,6 @@ d3.json(APIurl, function(error, data) {
       // The amount of votes that is considered invalid
       let invalid = data["data"][provinceID]["sum"]["tSah"];
       invalidTotal += invalid;
-      console.log(provinceName);
-      console.log(invalidTotal);
       if (i < lengthOfData - 2) {
         jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
@@ -304,3 +302,5 @@ d3.json(APIurl, function(error, data) {
         // })
   })
 })
+
+console.log("Please let me know if the site isn't working properly thank you! - H")
