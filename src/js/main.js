@@ -34,7 +34,9 @@ let svg = d3.select("#map")
             .append("g")
             .attr("tranform", "translate(0" + margin.left + "," + margin.top + ")");
 
-
+let commaSeparate = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 let date = Date.now();
 let APIurl = "https://kawal-c1.appspot.com/api/c/0?" + date;
@@ -310,7 +312,7 @@ d3.json(APIurl, function(error, data) {
     parties.forEach(function(party) {
       d3.select(`#${party}-vote`)
         .text(() => {
-          return legislativeTotal[party].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          return commaSeparate(legislativeTotal[party]);
         })
     });
   
@@ -325,12 +327,12 @@ d3.json(APIurl, function(error, data) {
 
     d3.select("#total-votes")
       .text(() => {
-        return (validTotal + invalidTotal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return commaSeparate(validTotal + invalidTotal);
       })
 
     d3.select("#valid-votes")
       .text(() => {
-        return validTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return commaSeparate(validTotal);
       })
 
     d3.select("#valid-votes-percentage")
@@ -345,14 +347,14 @@ d3.json(APIurl, function(error, data) {
     
     d3.select("#invalid-votes")
       .text(() => {
-        return invalidTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return commaSeparate(invalidTotal);
       })
 
     d3.select("#jokomaruf-vote")
-      .text(candidateOneTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+      .text(commaSeparate(candidateOneTotal));
     
     d3.select("#prabowosandi-vote")
-      .text(candidateTwoTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+      .text(commaSeparate(candidateTwoTotal));
 
     d3.select("#jokomaruf-vote-percentage")
       .text(() => {
@@ -366,17 +368,17 @@ d3.json(APIurl, function(error, data) {
 
     d3.select("#received-TPS")
       .text(() => {
-        return receivedTPSTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " (" + (receivedTPSTotal/TPSTotal * 100).toFixed(2) +  "%)";
+        return commaSeparate(receivedTPSTotal) + " (" + (receivedTPSTotal/TPSTotal * 100).toFixed(2) +  "%)";
       })
 
     d3.select("#unprocessed-TPS")
     .text(() => {
-      return unprocessedTPSTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return commaSeparate(unprocessedTPSTotal);
     })
 
     d3.select("#error-TPS")
     .text(() => {
-      return errorTPSTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return commaSeparate(errorTPSTotal);
     })
 
     svg.selectAll(".province")
@@ -405,7 +407,7 @@ d3.json(APIurl, function(error, data) {
           tooltip.html(`
             <div class="tooltip">
               <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
-              <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span></p><br/>
+              <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${commaSeparate(d["properties"]["candidateOne"])}</span> <span style="float: right; color: #79ADDC;">${commaSeparate(d["properties"]["candidateTwo"])}</span></p><br/>
               <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
             </div>
           `)
@@ -533,6 +535,50 @@ d3.json(APIurl, function(error, data) {
             .on("mouseover", d => {
               tooltip.style("visibility", "hidden");
             })
+            .on("click", d=> {
+
+              parties.forEach(function(party) {
+                d3.select(`#${party}-vote`)
+                  .transition(1000)
+                  .text(() => {
+                    return commaSeparate(d["properties"][party]);
+                  })
+              });
+
+              legVoteMax = d["properties"][parties[0]];
+              legVoteMin = d["properties"][parties[0]];
+
+              legislativeTotalSum = d["properties"][parties[0]];
+              
+              for (let i = 1; i < parties.length; i++) {
+                legislativeTotalSum += d["properties"][parties[i]];
+                if (d["properties"][parties[i]] > legVoteMax) {
+                  legVoteMax = d["properties"][parties[i]];
+                } else if (d["properties"][parties[i]] < legVoteMin) {
+                  legVoteMin = d["properties"][parties[i]];
+                }
+              }
+
+              legVoteLogScale = d3.scalePow()
+                                  .domain([legVoteMin, legVoteMax])
+                                  .range([40, 80]);
+
+              parties.forEach(function(party) {
+                d3.select(`#${party}-icon`)
+                  .transition(2000)
+                  .style("width", () => {
+                    return legVoteLogScale(d["properties"][party]) + "px";
+                  })
+              });
+
+              parties.forEach(function(party) {
+                d3.select(`#${party}-vote-percentage`)
+                  .text(() => {
+                    return `${(d["properties"][party]/legislativeTotalSum * 100).toFixed(2)}%`;
+                  })
+              });
+
+            })
       
         })
   
@@ -572,7 +618,7 @@ d3.json(APIurl, function(error, data) {
               tooltip.html(`
                 <div class="tooltip">
                   <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
-                  <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span></p><br/>
+                  <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${commaSeparate(d["properties"]["candidateOne"])}</span> <span style="float: right; color: #79ADDC;">${commaSeparate(d["properties"]["candidateTwo"])}</span></p><br/>
                   <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
                 </div>
               `)
