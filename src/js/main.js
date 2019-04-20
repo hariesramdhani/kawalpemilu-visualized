@@ -34,6 +34,8 @@ let svg = d3.select("#map")
             .append("g")
             .attr("tranform", "translate(0" + margin.left + "," + margin.top + ")");
 
+
+
 let date = Date.now();
 let APIurl = "https://kawal-c1.appspot.com/api/c/0?" + date;
 let lengthOfData;
@@ -74,7 +76,7 @@ d3.json(APIurl, function(error, data) {
       return console.log(error);
     }
 
-    for (let i = 0; i< lengthOfData; i++) {
+    for (let i = 0; i< lengthOfData - 1; i++) {
       // the key to GET the election result data
       let provinceID = data["children"][i][0];
       let provinceName = data["children"][i][1];
@@ -112,10 +114,10 @@ d3.json(APIurl, function(error, data) {
       // The amount of votes that is considered invalid
       let invalid = data["data"][provinceID]["sum"]["tSah"];
       invalidTotal += invalid;
-
-      if (i != lengthOfData - 1) {
+      console.log(provinceName);
+      console.log(invalidTotal);
+      if (i < lengthOfData - 2) {
         jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
-
 
         for (let j = 0; i < jsonFeatures.length; j++) {
 
@@ -254,15 +256,48 @@ d3.json(APIurl, function(error, data) {
         //   let url = `https://kawal-c1.appspot.com/api/c/${provinceID}?${date}`;
         //   let jsonFile = `src/assets/json/provinces/${provinceID}.json`
 
-        //   let panel = d3.select("#map")
-        //                 .append("div")
-        //                 .attr("id", "window-panel")
+        //   d3.select("#window-panel")
+        //     .style("display", "flex");
+                        
 
         //   d3.json(jsonFile, function(error, id) {
 
         //     if (error) {
         //       return console.log(error);
         //     }
+
+        //     console.log(id);
+
+        //     let jsonFeaturesPanel = topojson.feature(id, id.objects.IDN_adm_2_kabkota).features;
+
+        //     let svgPanel = d3.select("#window-panel")
+        //       .append("svg")
+        //       .attr("id", "city")
+        //       .attr("width", 400)
+        //       .attr("height", 400)
+        //       .append("g")
+        //       .attr("tranform", "translate(0" + margin.left + "," + margin.top + ")");
+            
+
+        //     let projectionPanel = d3.geoMercator()
+        //           .translate([-7400, 470])
+        //           .scale([4500]);
+
+        //     //Define default path generator
+        //     let pathPanel = d3.geoPath()
+        //                 .projection(projectionPanel);
+
+
+        //     svgPanel.selectAll(".city")
+        //       .data(jsonFeaturesPanel)
+        //       .enter()
+        //       .append("path")
+        //       .attr("d", pathPanel)
+        //       .attr("class", "city")
+        //       .style("z-index", 99)
+        //       .attr("fill", "white")
+        //       .style('stroke', 'black')
+        //       .style("opacity", 1)
 
         //   })
             
