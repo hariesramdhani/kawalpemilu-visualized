@@ -239,6 +239,12 @@ d3.json(APIurl, function(error, data) {
       // legislativeTotal["PKP"] += legPKP;
 
       let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
+      
+      console.log(legislative[legMax]);
+
+      if (legislative[legMax] == undefined) {
+        legMax = "NONE";
+      }
 
 
       if (i < lengthOfData - 2) {
@@ -280,23 +286,6 @@ d3.json(APIurl, function(error, data) {
             });
 
             jsonFeatures[j]["properties"]["legMax"] = legMax;
-
-            // jsonFeatures[j]["properties"]["GER"] = legislative["GER"]
-            // jsonFeatures[j]["properties"]["PDI"] = legislative["PDI"]
-            // jsonFeatures[j]["properties"]["GOL"] = legGOL;
-            // jsonFeatures[j]["properties"]["NAS"] = legNAS;
-            // jsonFeatures[j]["properties"]["GAR"] = legGAR;
-            // jsonFeatures[j]["properties"]["BER"] = legBER;
-            // jsonFeatures[j]["properties"]["PKS"] = legPKS;
-            // jsonFeatures[j]["properties"]["PER"] = legPER;
-            // jsonFeatures[j]["properties"]["PPP"] = legPPP;
-            // jsonFeatures[j]["properties"]["PSI"] = legPSI;
-            // jsonFeatures[j]["properties"]["PAN"] = legPAN;
-            // jsonFeatures[j]["properties"]["HAN"] = legHAN;
-            // jsonFeatures[j]["properties"]["DEM"] = legDEM;
-            // jsonFeatures[j]["properties"]["PBB"] = legPBB;
-            // jsonFeatures[j]["properties"]["PKP"] = legPKP;
-
             break;
           }
         }
@@ -535,12 +524,15 @@ d3.json(APIurl, function(error, data) {
               } else if (d["properties"]["legMax"] == "PBB") {
                 return "#8BAEA1";
               } else {
-                return "black";
+                return "None";
               }
             })
-            // .on("mouseover", d => {
-            
-            // })
+
+          svg.selectAll(".province")
+            .style("cursor", "pointer")
+            .on("mouseover", d => {
+              tooltip.style("visibility", "hidden");
+            })
       
         })
   
@@ -569,22 +561,24 @@ d3.json(APIurl, function(error, data) {
                 return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
               }
             })
-            // .on("mouseover", d => {
 
-            //   let tempTotal = d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]
-            //   let tempCandidateOnePercentage = ((d["properties"]["candidateOne"] / tempTotal) * 100).toFixed(2)
-            //   let tempCandidateTwoPercentage = ((d["properties"]["candidateTwo"] / tempTotal) * 100).toFixed(2)
+          svg.selectAll(".province")
+            .on("mouseover", d => {
+
+              let tempTotal = d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]
+              let tempCandidateOnePercentage = ((d["properties"]["candidateOne"] / tempTotal) * 100).toFixed(2)
+              let tempCandidateTwoPercentage = ((d["properties"]["candidateTwo"] / tempTotal) * 100).toFixed(2)
     
-            //   tooltip.html(`
-            //     <div class="tooltip">
-            //       <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
-            //       <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span></p><br/>
-            //       <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
-            //     </div>
-            //   `)
+              tooltip.html(`
+                <div class="tooltip">
+                  <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+                  <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${d["properties"]["candidateOne"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span> <span style="float: right; color: #79ADDC;">${d["properties"]["candidateTwo"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</span></p><br/>
+                  <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
+                </div>
+              `)
     
-            //   tooltip.style("visibility", "visible");
-            // })
+              tooltip.style("visibility", "visible");
+            })
           
         })
   })
