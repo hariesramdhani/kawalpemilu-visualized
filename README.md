@@ -25,7 +25,7 @@ Example:
 The first element is the code number to access the data from the API so if the `REGION CODE` that is being used is 1 it will give the votes data for the REGENCY and CITY in ACEH province.
 The second element corresponds to the total number of voting places in the region.
 
-The second part is the one that consists the voting data. To access this part use the `REGION CODE` obtained from the first element of the former part. The objects returned is pretty much self explanatory, please crosscheck to KawalPemilu tabular data columns in case of doubt.
+The second part is the one that consists the voting data. To access this part use the `REGION CODE` obtained from the first element of the former part. The objects returned are pretty much self explanatory, please crosscheck to KawalPemilu tabular data columns in case of doubt.
 
 #### Start the Development on your PC
 You need to have Python3++ installed or any code editor with Live Preview extension will do (lie VS Code or Brackets)
@@ -47,6 +47,7 @@ It can be accessed via `localhost:5500` on your browser
 - **Test, test, test**; No tests at the moment
 
 #### Thanks to
+- [KawalPemilu.org](http://kawalpemilu.org) - For the API
 - [@Sejuk_Indonesia](https://twitter.com/Sejuk_Indonesia/) - For the Pileg visualization idea
 - [u/sayamemangdemikian](http://old.reddit.com/user/sayamemangdemikian) - For the gradient idea
 
