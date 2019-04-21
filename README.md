@@ -8,13 +8,13 @@ KawalPemilu API can be accessed via
 https://kawal-c1.appspot.com/api/c/[REGION CODE]?[TIME]/
 ```
 - `REGION CODE` is a number ranging from 1~... that denotes the location of the place where the votes is collected
-- `TIME` is pretty much self explnatory, to generate time in Javascript use `Date.now()`
+- `TIME` is pretty much self explanatory, to generate time in Javascript use `Date.now()`
 
 Example of request:
 ```
 https://kawal-c1.appspot.com/api/c/0?1555803179480/
 ```
-This will request votes data in JSON format for all provinces at Sunday, 21st April 6:333 AM GMT+7.
+This will request votes data in JSON format for all provinces on Sunday, 21st April 6:333 AM GMT+7.
 
 #### JSON file
 The JSON file consists of two bigger parts, the first one is the value of `"children"`. It consists an array of array of the information about the provinces (if the `REGION CODE` is 0). 
@@ -36,4 +36,11 @@ python -m http.server 5500
 ```
 It can be accessed via `localhost:5500` on your browser
 
-#### I'll resume writing the docs later
+#### What to Implement/Do Next
+- **Regencies/cities visualization**; when user clicks the province a pop up will appear showing the visualization of number of votes in cities/regencies of the provinces. (Additional information about the votes collected in that province would be nice).
+- **Tweaks the CSS and Javascript codes**; right now there are tons of redundant lines of codes would be nice if it can be cleaned. Especially the CSS on `index.html`. Cleaning the inconsistency of ES6 and ES5 would also be nice.
+- **Error Handling**; the page doesn't come with a clever error handling so when the API changed/is down the page will show nothing. A pop up message would be nice.
+- **Add Kaltara to the main topojson file**; hadn't had the time to do so, the easiest way would be to use GEOjson.io to add it.
+- **Test, test, test** - No tests at the moment
+
+New ideas and contributions are always welcome!
