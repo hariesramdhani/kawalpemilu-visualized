@@ -95,8 +95,6 @@ export const mapping = function(id, filename) {
 
   d3.json(APIurl, function(error, data) {
     
-
-    console.log(data);
     lengthOfData = data["children"].length;
 
     if (lengthOfData == undefined) {
@@ -244,29 +242,41 @@ export const mapping = function(id, filename) {
                               .domain([legVoteMin, legVoteMax])
                               .range([40, 80]);
 
-      parties.forEach(function(party) {
-        d3.select(`#${party}-icon`)
-          .style("width", () => {
-            return legVoteLogScale(legislativeTotal[party]) + "px";
-          })
-      });            
+      let legislativeTotalSum = Object.values(legislativeTotal).reduce((a, b) => a + b);
 
       parties.forEach(function(party) {
-        d3.select(`#${party}-vote`)
+        let partyContainer = d3.select("#legislative")
+                              .append("div")
+                              .attr("class", "partai-container")
+        
+        let partyContainerImage = partyContainer.append("img")
+                                      .attr("id", `${party}-icon`)
+                                      .attr("class", "partai-icon")
+                                      .attr("src", `src/assets/img/partai/${party}.png`)
+                                      .style("width", () => {
+                                        return legVoteLogScale(legislativeTotal[party]) + "px";
+                                      })
+        
+        let partyVoteDescription = partyContainer.append("div")
+                                    .attr("class", "vote-description")
+        
+        partyVoteDescription.append("h3")
+          .text(`${party}`)
+        
+        partyVoteDescription.append("h1")
+          .attr("id", `${party}-vote`)
           .text(() => {
             return commaSeparate(legislativeTotal[party]);
           })
-      });
-    
-      let legislativeTotalSum = Object.values(legislativeTotal).reduce((a, b) => a + b);
-      parties.forEach(function(party) {
-        d3.select(`#${party}-vote-percentage`)
+        
+        partyVoteDescription.append("h3")
+          .attr("id", `${party}-vote-percentage`)
           .text(() => {
             return `${(legislativeTotal[party]/legislativeTotalSum * 100).toFixed(2)}%`;
           })
-      });
 
-
+      });            
+  
       d3.select("#total-votes")
         .text(() => {
           return commaSeparate(validTotal + invalidTotal);

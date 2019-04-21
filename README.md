@@ -27,4 +27,13 @@ The second element corresponds to the total number of voting places in the regio
 
 The second part is the one that consists the voting data. To access this part use the `REGION CODE` obtained from the first element of the former part. The objects returned is pretty much self explanatory, please crosscheck to KawalPemilu tabular data columns in case of doubt.
 
-## (To be continued. I'll resume it later :( )
+#### Start the Development on your PC
+You need to have Python3++ installed or any code editor with Live Preview extension will do (lie VS Code or Brackets)
+```
+git clone https://github.com/hariesramdhani/kawalpemilu-visualized.git && cd kawalpemilu-visualized
+
+python -m http.server 5500
+```
+It can be accessed via `localhost:5500` on your browser
+
+#### I'll resume writing the docs later
