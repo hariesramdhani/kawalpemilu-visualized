@@ -18,8 +18,9 @@ body {
 }
 
 .ballot-container {
-    padding: 0 0px;
     display: inline-block;
+    vertical-align: middle;
+    padding: 0 30px;
 }
 
 .vote-description {
@@ -54,11 +55,6 @@ h1, h3, p {
     width: 150px; 
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
     vertical-align: middle;
-}
-
-.ballot-container {
-    vertical-align: middle;
-    padding: 0 30px;
 }
 
 a {
