@@ -1,4 +1,4 @@
-export const mapping = function(id, filename) {
+export const mapping = (id, filename) => {
   let w = 1200,
       h = 400;
 
@@ -9,10 +9,7 @@ export const mapping = function(id, filename) {
     right: 40
   };
 
-  let width = w - margin.left - margin.right;
-  let height = h - margin.top - margin.bottom;
-
-  let tooltip = d3.select("#map")
+  let tooltip = d3.select(`#${id}`)
                   .append("div")
                   .style("position", "fixed")
                   .style("z-index", 1)
@@ -26,8 +23,9 @@ export const mapping = function(id, filename) {
   //Define default path generator
   let path = d3.geoPath()
               .projection(projection);
-              
-  let svg = d3.select("#map")
+
+  // Create the SVG for the map            
+  let svg = d3.select(`#${id}`)
               .append("svg")
               .attr("id", "chart")
               .attr("width", w)
@@ -35,14 +33,19 @@ export const mapping = function(id, filename) {
               .append("g")
               .attr("tranform", "translate(0" + margin.left + "," + margin.top + ")");
 
+
+  // Make the number easier to read
   let commaSeparate = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   let date = Date.now();
   let APIurl = "https://kawal-c1.appspot.com/api/c/0?" + date;
+
   let lengthOfData;
   let jsonFeatures;
+
+  // Store all of the total here
   let candidateOneTotal = 0; 
   let candidateTwoTotal = 0;
   let validTotal = 0;
@@ -52,26 +55,15 @@ export const mapping = function(id, filename) {
   let unprocessedTPSTotal = 0;
   let errorTPSTotal = 0;
 
+  let parties = ["PKB", "GER", "PDI", "GOL", "NAS", "GAR", "BER", "PKS", "PER", "PPP", "PSI", "PAN", "HAN", "DEM", "PBB", "PKP"];
   let legislativeTotal = {
-    "PKB": 0,
-    "GER": 0,
-    "PDI": 0,
-    "GOL": 0,
-    "NAS": 0,
-    "GAR": 0,
-    "BER": 0,
-    "PKS": 0,
-    "PER": 0,
-    "PPP": 0,
-    "PSI": 0,
-    "PAN": 0,
-    "HAN": 0,
-    "DEM": 0,
-    "PBB": 0,
-    "PKP": 0,
+
   }
 
-  let parties = ["PKB", "GER", "PDI", "GOL", "NAS", "GAR", "BER", "PKS", "PER", "PPP", "PSI", "PAN", "HAN", "DEM", "PBB", "PKP"];
+  // Initialize the object to store legislative vote counts
+  parties.forEach(party => {
+    legislativeTotal[party] = 0;
+  })
 
   let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -93,16 +85,11 @@ export const mapping = function(id, filename) {
       return time;
     })
 
-  d3.json(APIurl, function(error, data) {
+  d3.json(APIurl, (error, data) => {
     
     lengthOfData = data["children"].length;
 
-    if (lengthOfData == undefined) {
-      d3.select("#error-message")
-        .attr("display", "flex");
-    }
-
-    d3.json("src/assets/json/indonesia.json", function(error, id) {
+    d3.json("src/assets/json/indonesia.json", (error, id) => {
 
       if (error) {
         return console.log(error);
@@ -150,26 +137,15 @@ export const mapping = function(id, filename) {
         // LEGISLATIVE DATA STARTS HERE
 
         let legislative = {
-          "PKB": 0,
-          "GER": 0,
-          "PDI": 0,
-          "GOL": 0,
-          "NAS": 0,
-          "GAR": 0,
-          "BER": 0,
-          "PKS": 0,
-          "PER": 0,
-          "PPP": 0,
-          "PSI": 0,
-          "PAN": 0,
-          "HAN": 0,
-          "DEM": 0,
-          "PBB": 0,
-          "PKP": 0,
-        }
 
-        parties.forEach(function(party) {
+        }
+        parties.forEach(party => {
+          legislative[party] = 0;
+        })
+
+        parties.forEach(party => {
           
+          // PKS key on the API is 'sej' that's why
           if (party == "PKS") {
             legislative[party] = data["data"][provinceID]["sum"]["sej"];  
           } else {
@@ -183,18 +159,20 @@ export const mapping = function(id, filename) {
 
         let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
         
-
+        // Without this the map color will look like the last party on the list
         if (legislative[legMax] == undefined) {
           legMax = "NONE";
         }
 
 
+        // Both Kaltara and Luar Negeri doesn't have any location on the TOPOjson (needs a better way to handle this)
         if (i < lengthOfData - 2) {
           jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
           for (let j = 0; i < jsonFeatures.length; j++) {
 
             let provinceNameJSON;
+
             if (jsonFeatures[j]["properties"]["name"] == null) {
                 continue;
             } else {
@@ -223,7 +201,7 @@ export const mapping = function(id, filename) {
 
               // LEGISLATIVE VOTES
 
-              parties.forEach(function(party) {
+              parties.forEach(party => {
                 jsonFeatures[j]["properties"][party] = legislative[party];
               });
 
@@ -235,27 +213,38 @@ export const mapping = function(id, filename) {
         }
       }
 
-      let legVoteMax = Object.keys(legislativeTotal).reduce(function(m, k){ return legislativeTotal[k] > m ? legislativeTotal[k] : m }, -Infinity); 
-      let legVoteMin = Object.keys(legislativeTotal).reduce(function(m, k){ return legislativeTotal[k] < m ? legislativeTotal[k] : m }, Infinity); 
+      // Create a power scale for the size of the icons
+      let legVoteMax = Object.keys(legislativeTotal).reduce((m, k) => { return legislativeTotal[k] > m ? legislativeTotal[k] : m }, -Infinity); 
+      let legVoteMin = Object.keys(legislativeTotal).reduce((m, k) => { return legislativeTotal[k] < m ? legislativeTotal[k] : m }, Infinity); 
 
-      let legVoteLogScale = d3.scalePow()
+      let legVotePowScale = d3.scalePow()
                               .domain([legVoteMin, legVoteMax])
                               .range([40, 80]);
 
       let legislativeTotalSum = Object.values(legislativeTotal).reduce((a, b) => a + b);
 
-      parties.forEach(function(party) {
+
+      // GENERATE THIS (PKB is used as an example)
+      // <div class="partai-container">
+      //   <img id="PKB-icon" class="partai-icon" src="src/assets/img/partai/PKB.png" style="width: 53.5097px;">
+      //   <div class="vote-description">
+      //     <h3>PKB</h3>
+      //     <h1 id="PKB-vote">4,688</h1>
+      //     <h3 id="PKB-vote-percentage">8.68%</h3>
+      //   </div>
+      // </div>
+      parties.forEach(party => {
         let partyContainer = d3.select("#legislative")
                               .append("div")
                               .attr("class", "partai-container")
         
-        let partyContainerImage = partyContainer.append("img")
-                                      .attr("id", `${party}-icon`)
-                                      .attr("class", "partai-icon")
-                                      .attr("src", `src/assets/img/partai/${party}.png`)
-                                      .style("width", () => {
-                                        return legVoteLogScale(legislativeTotal[party]) + "px";
-                                      })
+        partyContainer.append("img")
+          .attr("id", `${party}-icon`)
+          .attr("class", "partai-icon")
+          .attr("src", `src/assets/img/partai/${party}.png`)
+          .style("width", () => {
+            return legVotePowScale(legislativeTotal[party]) + "px";
+          })
         
         let partyVoteDescription = partyContainer.append("div")
                                     .attr("class", "vote-description")
@@ -385,7 +374,7 @@ export const mapping = function(id, filename) {
           //     .style("display", "flex");
                           
 
-          //   d3.json(jsonFile, function(error, id) {
+          //   d3.json(jsonFile, (error, id) => {
 
           //     if (error) {
           //       return console.log(error);
@@ -430,7 +419,7 @@ export const mapping = function(id, filename) {
 
 
         d3.select("#legislative-election")
-          .on("click", function(){
+          .on("click", () => {
 
             d3.select("#legislative-election")
               .style("background-color", "#B3A395");
@@ -492,7 +481,7 @@ export const mapping = function(id, filename) {
               })
               .on("click", d=> {
 
-                parties.forEach(function(party) {
+                parties.forEach(party => {
                   d3.select(`#${party}-vote`)
                     .transition(1000)
                     .text(() => {
@@ -514,19 +503,19 @@ export const mapping = function(id, filename) {
                   }
                 }
 
-                legVoteLogScale = d3.scalePow()
+                legVotePowScale = d3.scalePow()
                                     .domain([legVoteMin, legVoteMax])
                                     .range([40, 80]);
 
-                parties.forEach(function(party) {
+                parties.forEach(party => {
                   d3.select(`#${party}-icon`)
                     .transition(2000)
                     .style("width", () => {
-                      return legVoteLogScale(d["properties"][party]) + "px";
+                      return legVotePowScale(d["properties"][party]) + "px";
                     })
                 });
 
-                parties.forEach(function(party) {
+                parties.forEach(party => {
                   d3.select(`#${party}-vote-percentage`)
                     .text(() => {
                       return `${(d["properties"][party]/legislativeTotalSum * 100).toFixed(2)}%`;
@@ -538,7 +527,7 @@ export const mapping = function(id, filename) {
           })
     
         d3.select("#presidential-election")
-          .on("click", function(){
+          .on("click", () => {
 
             d3.select("#legislative-election")
               .style("background-color", "#DAC6B5");

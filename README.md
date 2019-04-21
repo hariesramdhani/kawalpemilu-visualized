@@ -41,6 +41,7 @@ It can be accessed via `localhost:5500` on your browser
 - **Tweaks the CSS and Javascript codes**; right now there are tons of redundant lines of codes would be nice if it can be cleaned. Especially the CSS on `index.html`. Cleaning the inconsistency of ES6 and ES5 would also be nice.
 - **Error Handling**; the page doesn't come with a clever error handling so when the API changed/is down the page will show nothing. A pop up message would be nice.
 - **Add Kaltara to the main topojson file**; hadn't had the time to do so, the easiest way would be to use GEOjson.io to add it.
+- **Clever way to translate the map**; at the moment I translate the map X, Y position manually. There must be a clever way to do this. Or there isn't.
 - **Test, test, test** - No tests at the moment
 
 New ideas and contributions are always welcome!
