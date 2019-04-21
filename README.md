@@ -27,3 +27,4 @@ The second element corresponds to the total number of voting places in the regio
 
 The second part is the one that consists the voting data. To access this part use the `REGION CODE` obtained from the first element of the former part. The objects returned is pretty much self explanatory, please crosscheck to KawalPemilu tabular data columns in case of doubt.
 
+## (To be continued. I'll resume it later :( )
