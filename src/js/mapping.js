@@ -551,9 +551,6 @@ export const mapping = (id, filename) => {
 
             svg.selectAll(".province")
               .style("cursor", "pointer")
-              .on("mouseover", d => {
-                tooltip.style("visibility", "hidden");
-              })
               .on("click", d=> {
 
                 legVoteMax = d["properties"][parties[0]];
@@ -607,6 +604,18 @@ export const mapping = (id, filename) => {
                 });
 
               })
+              .on("mouseover", d => {
+                tooltip.html(`
+                  <div class="tooltip">
+                    <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+                  </div>
+                `);
+
+                tooltip.style("visibility", "visible");
+              })
+              .on("mousemove", () => {
+                tooltip.style("top", (d3.event.clientY - 60) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+              });
         
           })
     
@@ -656,6 +665,9 @@ export const mapping = (id, filename) => {
       
                 tooltip.style("visibility", "visible");
               })
+              .on("mousemove", () => {
+                tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+              })
             
           })
         
@@ -698,7 +710,7 @@ export const mapping = (id, filename) => {
             d3.select(`#${button["id"]}`)
               .on("click", () => {
                 svg.selectAll(".province")
-                  .transition()
+                  .transition(1000)
                   .style("fill", d => {
                     return colorScale(d["properties"][button["numerator"]]/d["properties"][button["denominator"]] * 100);
                   })
@@ -713,12 +725,11 @@ export const mapping = (id, filename) => {
                         <p style="text-align: center;">${commaSeparate(d["properties"][button["numerator"]])}</p>
                       </div>
                     `)
-                    .on("mousemove", () => {
-                      tooltip.style("top", (d3.event.clientY - 140) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
-                  })
-          
                     tooltip.style("visibility", "visible");
                   })
+                  .on("mousemove", () => {
+                    tooltip.style("top", (d3.event.clientY - 110) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+                  });
       
 
               })
