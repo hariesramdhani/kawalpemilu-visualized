@@ -59,14 +59,34 @@ export const mapping = (id, filename) => {
   let minTPS = 0;
   let maxTPS = 0;
 
-  let minValid = 0;
-  let maxValid = 0;
-
-  let minInvalid = 0;
-  let maxInvalid = 0;
-
-  let minReceived = 0;
-  let maxReceived = 0;
+  // Store objects for looping through the different buttons
+  let colorByButtons = [
+    {
+      "domainMin": 100,
+      "domainMax": 0,
+      "rangeMin": "#DBDDEA",
+      "rangeMax": "#57596C",
+      "id": "jumlah-TPS-diterima",
+      "numerator": "receivedTPS",
+      "denominator": "provinceTPSNo"
+    }, {
+      "domainMin": 100,
+      "domainMax": 0,
+      "rangeMin": "#BED0C3",
+      "rangeMax": "#477554",
+      "id": "jumlah-suara-sah",
+      "numerator": "valid",
+      "denominator": "totalVotes"
+    }, {
+      "domainMin": 1,
+      "domainMax": 0,
+      "rangeMin": "#FBCBC3",
+      "rangeMax": "#9D493A",
+      "id": "jumlah-suara-tidak-sah",
+      "numerator": "invalid",
+      "denominator": "totalVotes"
+    }
+  ]
 
   let parties = ["PKB", "GER", "PDI", "GOL", "NAS", "GAR", "BER", "PKS", "PER", "PPP", "PSI", "PAN", "HAN", "DEM", "PBB", "PKP"];
   let legislativeTotal = {
@@ -129,10 +149,15 @@ export const mapping = (id, filename) => {
         let receivedTPS = data["data"][provinceID]["sum"]["cakupan"];
         receivedTPSTotal += receivedTPS;
 
-        if (receivedTPS > maxTPS) {
-          maxReceived = receivedTPS;
-        } else if (receivedTPS < minTPS) {
-          minReceived = receivedTPS;
+
+
+        // Find max min for scaling
+        let receivedTPSPercentage = receivedTPS/provinceTPSNo * 100;
+
+        if (receivedTPSPercentage > colorByButtons[0]["domainMax"]) {
+          colorByButtons[0]["domainMax"] = receivedTPSPercentage;
+        } else if (receivedTPSPercentage < colorByButtons[0]["domainMin"]) {
+          colorByButtons[0]["domainMin"] = receivedTPSPercentage;
         }
 
         // Unprocessed TPS
@@ -155,20 +180,28 @@ export const mapping = (id, filename) => {
         let valid = data["data"][provinceID]["sum"]["sah"];
         validTotal += valid;
 
-        if (valid > maxValid) {
-          maxValid = valid;
-        } else if (valid < minValid) {
-          minValid = valid;
-        }
-
         // The amount of votes that is considered invalid
         let invalid = data["data"][provinceID]["sum"]["tSah"];
         invalidTotal += invalid;
 
-        if (invalid > maxInvalid) {
-          maxInvalid = invalid;
-        } else if (invalid < minInvalid) {
-          minInvalid = invalid;
+        let totalVotes = valid + invalid;
+
+        let validPercentage = valid/totalVotes * 100;
+
+
+        // Find Max Min for scaling
+        if (validPercentage > colorByButtons[1]["domainMax"]) {
+          colorByButtons[1]["domainMax"] = validPercentage;
+        } else if (validPercentage < colorByButtons[1]["domainMin"]) {
+          colorByButtons[1]["domainMin"] = validPercentage;
+        }
+
+        let invalidPercentage = invalid/totalVotes * 100;
+
+        if (invalidPercentage > colorByButtons[2]["domainMax"]) {
+          colorByButtons[2]["domainMax"] = invalidPercentage;
+        } else if (invalidPercentage < colorByButtons[2]["domainMin"]) {
+          colorByButtons[2]["domainMin"] = invalidPercentage;
         }
 
         // LEGISLATIVE DATA STARTS HERE
@@ -236,7 +269,7 @@ export const mapping = (id, filename) => {
 
               jsonFeatures[j]["properties"]["invalid"] = invalid;
 
-              jsonFeatures[j]["properties"]["totalVotes"] = valid + invalid;
+              jsonFeatures[j]["properties"]["totalVotes"] = totalVotes;
 
               // LEGISLATIVE VOTES
 
@@ -655,33 +688,10 @@ export const mapping = (id, filename) => {
               
           })
 
-          // Store objects for looping through the different buttons
-          let colorByButtons = [
-            {
-              "rangeMin": "#AEB2D1",
-              "rangeMax": "#8389AF",
-              "id": "jumlah-TPS-diterima",
-              "numerator": "receivedTPS",
-              "denominator": "provinceTPSNo"
-            }, {
-              "rangeMin": "#AADCB8",
-              "rangeMax": "#7AC890",
-              "id": "jumlah-suara-sah",
-              "numerator": "valid",
-              "denominator": "totalVotes"
-            }, {
-              "rangeMin": "#F89887",
-              "rangeMax": "#8389AF",
-              "id": "jumlah-suara-tidak-sah",
-              "numerator": "invalid",
-              "denominator": "totalVotes"
-            }
-          ]
-
           // Loop over the array to apply the same configs
           colorByButtons.forEach(button => {
             let colorScale = d3.scaleLinear()
-                          .domain([0,100])
+                          .domain([button["domainMin"], button["domainMax"]])
                           .interpolate(d3.interpolateCubehelix)
                           .range([d3.rgb(button["rangeMin"]), d3.rgb(button["rangeMax"])]);
 
@@ -690,7 +700,7 @@ export const mapping = (id, filename) => {
                 svg.selectAll(".province")
                   .transition()
                   .style("fill", d => {
-                    return colorScale(d["properties"][button["numerator"]]/d["properties"][button["denominator"]] * 100)
+                    return colorScale(d["properties"][button["numerator"]]/d["properties"][button["denominator"]] * 100);
                   })
 
                 svg.selectAll(".province")
