@@ -139,9 +139,9 @@ export const mapping = (id, filename) => {
         let legislative = {
 
         }
-        parties.forEach(party => {
-          legislative[party] = 0;
-        })
+        // parties.forEach(party => {
+        //   legislative[party] = 0;
+        // })
 
         parties.forEach(party => {
           
