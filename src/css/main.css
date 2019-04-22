@@ -125,3 +125,11 @@ a {
 #legislative {
     display: none;
 }
+
+.color-by-button {
+    padding: 5px 10px;
+    border-radius: 8px;
+    margin: 0 8px;
+    border: 2px solid black;
+    cursor: pointer;
+}

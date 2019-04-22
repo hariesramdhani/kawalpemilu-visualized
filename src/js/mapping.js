@@ -55,6 +55,19 @@ export const mapping = (id, filename) => {
   let unprocessedTPSTotal = 0;
   let errorTPSTotal = 0;
 
+  // Store MIN MAX DATA
+  let minTPS = 0;
+  let maxTPS = 0;
+
+  let minValid = 0;
+  let maxValid = 0;
+
+  let minInvalid = 0;
+  let maxInvalid = 0;
+
+  let minReceived = 0;
+  let maxReceived = 0;
+
   let parties = ["PKB", "GER", "PDI", "GOL", "NAS", "GAR", "BER", "PKS", "PER", "PPP", "PSI", "PAN", "HAN", "DEM", "PBB", "PKP"];
   let legislativeTotal = {
 
@@ -104,11 +117,23 @@ export const mapping = (id, filename) => {
         let provinceTPSNo = data["children"][i][2];
         TPSTotal += provinceTPSNo;
 
+        if (provinceTPSNo > maxTPS) {
+          maxTPS = provinceTPSNo;
+        } else if (provinceTPSNo < minTPS) {
+          minTPS = provinceTPSNo;
+        }
+
         // ELECTION RESULT DATA STARTS HERE
 
         // Received TPS data including the number of unprocessed ones
         let receivedTPS = data["data"][provinceID]["sum"]["cakupan"];
         receivedTPSTotal += receivedTPS;
+
+        if (receivedTPS > maxTPS) {
+          maxReceived = receivedTPS;
+        } else if (receivedTPS < minTPS) {
+          minReceived = receivedTPS;
+        }
 
         // Unprocessed TPS
         let unprocessedTPS = data["data"][provinceID]["sum"]["pending"];
@@ -130,9 +155,21 @@ export const mapping = (id, filename) => {
         let valid = data["data"][provinceID]["sum"]["sah"];
         validTotal += valid;
 
+        if (valid > maxValid) {
+          maxValid = valid;
+        } else if (valid < minValid) {
+          minValid = valid;
+        }
+
         // The amount of votes that is considered invalid
         let invalid = data["data"][provinceID]["sum"]["tSah"];
         invalidTotal += invalid;
+
+        if (invalid > maxInvalid) {
+          maxInvalid = invalid;
+        } else if (invalid < minInvalid) {
+          minInvalid = invalid;
+        }
 
         // LEGISLATIVE DATA STARTS HERE
 
@@ -198,6 +235,8 @@ export const mapping = (id, filename) => {
               jsonFeatures[j]["properties"]["valid"] = valid;
 
               jsonFeatures[j]["properties"]["invalid"] = invalid;
+
+              jsonFeatures[j]["properties"]["totalVotes"] = valid + invalid;
 
               // LEGISLATIVE VOTES
 
@@ -429,6 +468,9 @@ export const mapping = (id, filename) => {
     
             d3.select("#president")
               .style("display", "none");
+
+            d3.select("#color-by")
+              .style("display", "none");
     
             d3.select("#legislative")
               .style("display", "block");
@@ -546,6 +588,9 @@ export const mapping = (id, filename) => {
     
             d3.select("#president")
               .style("display", "block");
+            
+            d3.select("#color-by")
+              .style("display", "block");
     
             d3.select("#legislative")
               .style("display", "none");
@@ -580,6 +625,100 @@ export const mapping = (id, filename) => {
               })
             
           })
+        
+
+        let TPSColorScale = d3.scalePow()
+                              .domain([minTPS,maxTPS])
+                              .interpolate(d3.interpolateCubehelix)
+                              .range([d3.rgb("#CDCFCE"), d3.rgb('#787C7A')]);
+        
+        d3.select("#jumlah-TPS")
+          .on("click", () => {
+            svg.selectAll(".province")
+              .transition()
+              .style("fill", d => {
+                return TPSColorScale(d["properties"]["provinceTPSNo"]);
+              })
+            
+            svg.selectAll(".province")
+            .on("mouseover", d => {
+    
+              tooltip.html(`
+                <div class="tooltip">
+                  <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+                  <p style="text-align: center; font-size: 14px; padding: 5px;">${commaSeparate(d["properties"]["provinceTPSNo"])}</p>
+                </div>
+              `)
+    
+              tooltip.style("visibility", "visible");
+            })
+              
+          })
+
+          // Store objects for looping through the different buttons
+          let colorByButtons = [
+            {
+              "rangeMin": "#AEB2D1",
+              "rangeMax": "#8389AF",
+              "id": "jumlah-TPS-diterima",
+              "numerator": "receivedTPS",
+              "denominator": "provinceTPSNo"
+            }, {
+              "rangeMin": "#AADCB8",
+              "rangeMax": "#7AC890",
+              "id": "jumlah-suara-sah",
+              "numerator": "valid",
+              "denominator": "totalVotes"
+            }, {
+              "rangeMin": "#F89887",
+              "rangeMax": "#8389AF",
+              "id": "jumlah-suara-tidak-sah",
+              "numerator": "invalid",
+              "denominator": "totalVotes"
+            }
+          ]
+
+          // Loop over the array to apply the same configs
+          colorByButtons.forEach(button => {
+            let colorScale = d3.scaleLinear()
+                          .domain([0,100])
+                          .interpolate(d3.interpolateCubehelix)
+                          .range([d3.rgb(button["rangeMin"]), d3.rgb(button["rangeMax"])]);
+
+            d3.select(`#${button["id"]}`)
+              .on("click", () => {
+                svg.selectAll(".province")
+                  .transition()
+                  .style("fill", d => {
+                    return colorScale(d["properties"][button["numerator"]]/d["properties"][button["denominator"]] * 100)
+                  })
+
+                svg.selectAll(".province")
+                  .on("mouseover", d => {
+          
+                    tooltip.html(`
+                      <div class="tooltip">
+                        <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+                        <p style="text-align: center; font-size: 20px; padding: 5px;">${(d["properties"][button["numerator"]]/d["properties"][button["denominator"]] * 100).toFixed(2)}%</p>
+                        <p style="text-align: center;">${commaSeparate(d["properties"][button["numerator"]])}</p>
+                      </div>
+                    `)
+                    .on("mousemove", () => {
+                      tooltip.style("top", (d3.event.clientY - 140) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+                  })
+          
+                    tooltip.style("visibility", "visible");
+                  })
+      
+
+              })
+          })
+
+          
+            
+          
+        
+        
     })
   })
 
