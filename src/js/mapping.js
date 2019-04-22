@@ -159,7 +159,7 @@ export const mapping = (id, filename) => {
 
         let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
         
-        // Without this the map color will look like the last party on the list
+        // Without this the map color will look like the color of the last party on the list
         if (legislative[legMax] == undefined) {
           legMax = "NONE";
         }
@@ -481,21 +481,16 @@ export const mapping = (id, filename) => {
               })
               .on("click", d=> {
 
-                parties.forEach(party => {
-                  d3.select(`#${party}-vote`)
-                    .transition(1000)
-                    .text(() => {
-                      return commaSeparate(d["properties"][party]);
-                    })
-                });
-
                 legVoteMax = d["properties"][parties[0]];
                 legVoteMin = d["properties"][parties[0]];
 
                 legislativeTotalSum = d["properties"][parties[0]];
                 
                 for (let i = 1; i < parties.length; i++) {
-                  legislativeTotalSum += d["properties"][parties[i]];
+                  if (d["properties"][parties[i]] != undefined) {
+                    legislativeTotalSum += d["properties"][parties[i]];
+                  }
+
                   if (d["properties"][parties[i]] > legVoteMax) {
                     legVoteMax = d["properties"][parties[i]];
                   } else if (d["properties"][parties[i]] < legVoteMin) {
@@ -503,22 +498,36 @@ export const mapping = (id, filename) => {
                   }
                 }
 
+
                 legVotePowScale = d3.scalePow()
                                     .domain([legVoteMin, legVoteMax])
                                     .range([40, 80]);
 
                 parties.forEach(party => {
+                  d3.select(`#${party}-vote`)
+                    .transition(1000)
+                    .text(() => {
+                    
+                      if (d["properties"][party] != undefined) {
+                        return commaSeparate(d["properties"][party]);
+                      } else {
+                        return 0;
+                      }
+                    })
+
                   d3.select(`#${party}-icon`)
                     .transition(2000)
                     .style("width", () => {
                       return legVotePowScale(d["properties"][party]) + "px";
                     })
-                });
 
-                parties.forEach(party => {
                   d3.select(`#${party}-vote-percentage`)
                     .text(() => {
-                      return `${(d["properties"][party]/legislativeTotalSum * 100).toFixed(2)}%`;
+                      if (d["properties"][party] != undefined) {
+                        return `${(d["properties"][party]/legislativeTotalSum * 100).toFixed(2)}%`;
+                      } else {
+                        return 0;
+                      }
                     })
                 });
 
