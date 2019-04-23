@@ -31,7 +31,7 @@ export const mapping = (id, filename) => {
               .attr("width", w)
               .attr("height", h)
               .append("g")
-              .attr("tranform", "translate(0" + margin.left + "," + margin.top + ")");
+              .attr("tranform", `translate(${margin.left}, ${margin.top})`);
 
 
   // Make the number easier to read
@@ -40,7 +40,7 @@ export const mapping = (id, filename) => {
   }
 
   let date = Date.now();
-  let APIurl = "https://kawal-c1.appspot.com/api/c/0?" + date;
+  let APIurl = `https://kawal-c1.appspot.com/api/c/0?${date}`;
 
   let lengthOfData;
   let jsonFeatures;
@@ -118,7 +118,7 @@ export const mapping = (id, filename) => {
   d3.select("#last-update")
     .text(() => {
       let lastUpdateTime = new Date();
-      let time = lastUpdateTime.toLocaleDateString('id-ID', options) + " " + lastUpdateTime.toLocaleTimeString();
+      let time = `${lastUpdateTime.toLocaleDateString('id-ID', options)} ${lastUpdateTime.toLocaleTimeString()}`;
       return time;
     })
 
@@ -363,12 +363,12 @@ export const mapping = (id, filename) => {
 
       d3.select("#valid-votes-percentage")
         .text(() => {
-          return (validTotal / (validTotal + invalidTotal) * 100).toFixed(2) + "%";
+          return `${(validTotal / (validTotal + invalidTotal) * 100).toFixed(2)}%`;
         })
       
       d3.select("#invalid-votes-percentage")
         .text(() => {
-          return (invalidTotal / (validTotal + invalidTotal) * 100).toFixed(2) + "%";
+          return `${(invalidTotal / (validTotal + invalidTotal) * 100).toFixed(2)}%`;
         })
       
       d3.select("#invalid-votes")
@@ -384,17 +384,17 @@ export const mapping = (id, filename) => {
 
       d3.select("#jokomaruf-vote-percentage")
         .text(() => {
-          return (candidateOneTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2) + "%"
+          return `${(candidateOneTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2)}%`;
         })
       
       d3.select("#prabowosandi-vote-percentage")
         .text(() => {
-          return (candidateTwoTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2) + "%"
+          return `${(candidateTwoTotal / (candidateOneTotal + candidateTwoTotal) * 100).toFixed(2)}%`;
         })
 
       d3.select("#received-TPS")
         .text(() => {
-          return commaSeparate(receivedTPSTotal) + " (" + (receivedTPSTotal/TPSTotal * 100).toFixed(2) +  "%)";
+          return `${commaSeparate(receivedTPSTotal)} (${(receivedTPSTotal/TPSTotal * 100).toFixed(2)}%)`;
         })
 
       d3.select("#unprocessed-TPS")
@@ -448,7 +448,8 @@ export const mapping = (id, filename) => {
               tooltip.style("visibility", "hidden");
           })
           .on("mousemove", () => {
-              tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+              tooltip.style("top", `${d3.event.clientY - 90}px`)
+                      .style("left", `${d3.event.clientX - 80}px`);    
           })
 
         // Winning in ..... provinces
@@ -584,7 +585,8 @@ export const mapping = (id, filename) => {
                 tooltip.style("visibility", "visible");
               })
               .on("mousemove", () => {
-                tooltip.style("top", (d3.event.clientY - 60) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+                tooltip.style("top", `${d3.event.clientY - 60}px`)
+                        .style("left", `${d3.event.clientX - 80}px`);    
               });
         
           })
@@ -638,7 +640,8 @@ export const mapping = (id, filename) => {
                 tooltip.style("visibility", "visible");
               })
               .on("mousemove", () => {
-                tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+                tooltip.style("top", `${d3.event.clientY - 90}px`)
+                        .style("left", `${d3.event.clientX - 80}px`);    
               })
             
           })
@@ -700,7 +703,8 @@ export const mapping = (id, filename) => {
                     tooltip.style("visibility", "visible");
                   })
                   .on("mousemove", () => {
-                    tooltip.style("top", (d3.event.clientY - 110) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
+                    tooltip.style("top", `${d3.event.clientY - 110}px`)
+                            .style("left", `${d3.event.clientX - 80}px`);    
                   });
       
 
