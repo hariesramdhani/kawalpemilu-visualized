@@ -451,61 +451,6 @@ export const mapping = (id, filename) => {
               tooltip.style("top", (d3.event.clientY - 90) + 'px').style("left", (d3.event.clientX - 80) + 'px');    
           })
 
-          // REGENCIES AND CITIES VISUALIZATION ON CLICK
-
-          // .on("click", d => {
-
-          //   let provinceID = d["properties"]["provinceID"];
-          //   let url = `https://kawal-c1.appspot.com/api/c/${provinceID}?${date}`;
-          //   let jsonFile = `src/assets/json/provinces/${provinceID}.json`
-
-          //   d3.select("#window-panel")
-          //     .style("display", "flex");
-                          
-
-          //   d3.json(jsonFile, (error, id) => {
-
-          //     if (error) {
-          //       return console.log(error);
-          //     }
-
-          //     console.log(id);
-
-          //     let jsonFeaturesPanel = topojson.feature(id, id.objects.IDN_adm_2_kabkota).features;
-
-          //     let svgPanel = d3.select("#window-panel")
-          //       .append("svg")
-          //       .attr("id", "city")
-          //       .attr("width", 400)
-          //       .attr("height", 400)
-          //       .append("g")
-          //       .attr("tranform", "translate(0" + margin.left + "," + margin.top + ")");
-              
-
-          //     let projectionPanel = d3.geoMercator()
-          //           .translate([-7400, 470])
-          //           .scale([4500]);
-
-          //     //Define default path generator
-          //     let pathPanel = d3.geoPath()
-          //                 .projection(projectionPanel);
-
-
-          //     svgPanel.selectAll(".city")
-          //       .data(jsonFeaturesPanel)
-          //       .enter()
-          //       .append("path")
-          //       .attr("d", pathPanel)
-          //       .attr("class", "city")
-          //       .style("z-index", 99)
-          //       .attr("fill", "white")
-          //       .style('stroke', 'black')
-          //       .style("opacity", 1)
-
-          //   })
-              
-          // })
-
         // Winning in ..... provinces
         d3.select("#jokomaruf-wins")
           .text(jokomarufWins)
