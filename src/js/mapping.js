@@ -208,6 +208,15 @@ export const mapping = (id, filename) => {
           colorByButtons[2]["domainMin"] = invalidPercentage;
         }
 
+        // Handle KALTARA problem for now
+        if (provinceName == "KALIMANTAN UTARA") {
+          if (candidateOne > candidateTwo) {
+            jokomarufWins += 1;
+          } else {
+            prabowosandiWins += 1;
+          }
+        }
+
         // LEGISLATIVE DATA STARTS HERE
 
         let legislative = {
@@ -413,7 +422,7 @@ export const mapping = (id, filename) => {
               jokomarufWins += 1;
 
               return candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]));
-            } else {
+            } else if (d["properties"]["candidateOne"] < d["properties"]["candidateTwo"]) {
               prabowosandiWins += 1;
               return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
             }
