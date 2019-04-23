@@ -59,6 +59,10 @@ export const mapping = (id, filename) => {
   let minTPS = 0;
   let maxTPS = 0;
 
+  // Winning in ..... provinces
+  let jokomarufWins = 0;
+  let prabowosandiWins = 0;
+
   // Store objects for looping through the different buttons
   let colorByButtons = [
     {
@@ -235,7 +239,7 @@ export const mapping = (id, filename) => {
         }
 
 
-        // Both Kaltara and Luar Negeri doesn't have any location on the TOPOjson (needs a better way to handle this)
+        // Both Kaltara and Luar Negeri doesn't have any location in the TOPOjson file (needs a better way to handle this)
         if (i < lengthOfData - 2) {
           jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
@@ -394,6 +398,7 @@ export const mapping = (id, filename) => {
         return commaSeparate(errorTPSTotal);
       })
 
+
       svg.selectAll(".province")
           .data(jsonFeatures)
           .enter()
@@ -405,8 +410,11 @@ export const mapping = (id, filename) => {
           })
           .style("fill", d => {
             if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
+              jokomarufWins += 1;
+
               return candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]));
             } else {
+              prabowosandiWins += 1;
               return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
             }
           })
@@ -489,7 +497,15 @@ export const mapping = (id, filename) => {
               
           // })
 
+        // Winning in ..... provinces
+        d3.select("#jokomaruf-wins")
+          .text(jokomarufWins)
+        
+        d3.select("#prabowosandi-wins")
+          .text(prabowosandiWins)
+          
 
+        // THE CODE THAT CONTROLS THE "LEGISLATIF" BUTTON STARTS HERE
         d3.select("#legislative-election")
           .on("click", () => {
 
@@ -618,7 +634,8 @@ export const mapping = (id, filename) => {
               });
         
           })
-    
+
+        // THE CODE THAT CONTROLS THE "PRESIDEN" BUTTON STARTS HERE
         d3.select("#presidential-election")
           .on("click", () => {
 
@@ -636,6 +653,7 @@ export const mapping = (id, filename) => {
     
             d3.select("#legislative")
               .style("display", "none");
+
 
             svg.selectAll(".province")
               .transition()
@@ -733,11 +751,7 @@ export const mapping = (id, filename) => {
       
 
               })
-          })
-
-          
-            
-          
+          })      
         
         
     })

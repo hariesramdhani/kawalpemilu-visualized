@@ -30,9 +30,9 @@ The second part is made of the vote data. To access the value, use the `REGION C
 #### Start the Development on your PC
 You need to have Python3++ installed or any code editor with Live Preview extension will do (e.g. VS Code or Brackets)
 ```
-git clone https://github.com/hariesramdhani/kawalpemilu-visualized.git && cd kawalpemilu-visualized
+$ git clone https://github.com/hariesramdhani/kawalpemilu-visualized.git && cd kawalpemilu-visualized
 
-python -m http.server 5500
+$ python -m http.server 5500
 ```
 It can be accessed via `localhost:5500` on your browser
 
