@@ -39,7 +39,7 @@ It can be accessed via `localhost:5500` on your browser
 #### What to Implement/Do Next
 - [ ] **Show past results**; it'd be nice if the user can see the past results not only the updated ones. I'm planning to use python, psycopq2 and heroku postgresql to store the data, this way KawalPemilu Visualized can retrieve the data from there.
 - [x] **Color map by**; the user can choose different filter for the colors of the map, like color the map regarding the number of TPS, the number of data collected etc.
-- [ ] **Regencies/cities visualization**; when the user clicks the province a pop up will appear showing the visualization of number of votes in cities/regencies of the provinces. (Additional information about the votes collected in that province would be nice).
+- [ ] **Regencies/cities visualization**; when the user clicks the province a pop up will appear showing the visualization of number of votes in cities/regencies of the provinces. [This was how I expected it'd look like](https://twitter.com/Harieesss/status/1119449495584927744)
 - [ ] **Tweak the CSS and Javascript codes**; right now there are tons of redundant lines of codes. It would be nice if it can be cleaned. Especially the CSS on `index.html`. Cleaning the inconsistency of ES6 and ES5 would also be nice.
 - [ ] **Error Handling**; the page doesn't come with a clever error handling so when the API is changed/down the page will show nothing. A pop up message would be nice.
 - [ ] **Add Kaltara to the main topojson file**; hadn't had the time to do so, the easiest way would be to use GEOjson.io to add it.
