@@ -228,7 +228,7 @@ export const mapping = (id, filename) => {
 
         parties.forEach(party => {
           
-          // PKS key on the API is 'sej' that's why
+          // PKS key in the API is 'sej' that's why
           if (party == "PKS") {
             legislative[party] = data["data"][provinceID]["sum"]["sej"];  
           } else {
@@ -242,13 +242,13 @@ export const mapping = (id, filename) => {
 
         let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
         
-        // Without this the map color will look like the color of the last party on the list
+        // Without this the map color will look like the color of the last party in the list
         if (legislative[legMax] == undefined) {
           legMax = "NONE";
         }
 
 
-        // Both Kaltara and Luar Negeri doesn't have any location in the TOPOjson file (needs a better way to handle this)
+        // Both Kaltara and Luar Negeri don't have any location in the TOPOjson file (needs a better way to handle this)
         if (i < lengthOfData - 2) {
           jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
 
