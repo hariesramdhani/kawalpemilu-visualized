@@ -437,8 +437,8 @@ export const mapping = (id, filename) => {
             tooltip.html(`
               <div class="tooltip">
                 <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
-                <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${commaSeparate(d["properties"]["candidateOne"])}</span> <span style="float: right; color: #79ADDC;">${commaSeparate(d["properties"]["candidateTwo"])}</span></p><br/>
-                <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #79ADDC;">${tempCandidateTwoPercentage}%</span></p><br/>
+                <p style="padding: 0 2px;"><span style="float: left; color: #AC0B13;">${commaSeparate(d["properties"]["candidateOne"])}</span> <span style="float: right; color: #597EA1;">${commaSeparate(d["properties"]["candidateTwo"])}</span></p><br/>
+                <p><span style="float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="float: right; color: #597EA1;">${tempCandidateTwoPercentage}%</span></p><br/>
               </div>
             `)
 
