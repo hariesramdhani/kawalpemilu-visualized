@@ -45,7 +45,7 @@ It can be accessed via `localhost:5500` on your browser
 - [ ] **Add Kaltara to the main topojson file**; hadn't had the time to do so, the easiest way would be to use GEOjson.io to add it.
 - [ ] **Clever way to translate the map**; at the moment I translated the map X, Y position manually. There must be a clever way to do this.
 - [ ] **Test, test, test**; there are no tests at the moment
-- [ ] **Take Color Blindness into account**;
+- [x] **Take Color Blindness into account**;
 
 #### Thanks to
 - [KawalPemilu.org](http://kawalpemilu.org) - For the API
