@@ -126,7 +126,7 @@ export const mapping = (id, filename) => {
     
     lengthOfData = data["children"].length;
 
-    d3.json("src/assets/json/indonesia.json", (error, id) => {
+    d3.json(filename, (error, id) => {
 
       if (error) {
         return console.log(error);

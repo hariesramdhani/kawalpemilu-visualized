@@ -1,6 +1,6 @@
 import {mapping} from "./mapping.js";
 
-const dataPath = "src/assets/data"
+const dataPath = "src/assets/"
 const jsonDataPath = `${dataPath}/json`
 
 mapping("map", `${jsonDataPath}/indonesia.json`);
