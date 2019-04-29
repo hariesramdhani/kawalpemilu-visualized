@@ -222,9 +222,6 @@ export const mapping = (id, filename) => {
         let legislative = {
 
         }
-        // parties.forEach(party => {
-        //   legislative[party] = 0;
-        // })
 
         parties.forEach(party => {
           
@@ -309,15 +306,19 @@ export const mapping = (id, filename) => {
       let legislativeTotalSum = Object.values(legislativeTotal).reduce((a, b) => a + b);
 
 
-      // GENERATE THIS (PKB is used as an example)
-      // <div class="partai-container">
-      //   <img id="PKB-icon" class="partai-icon" src="src/assets/img/partai/PKB.png" style="width: 53.5097px;">
-      //   <div class="vote-description">
-      //     <h3>PKB</h3>
-      //     <h1 id="PKB-vote">4,688</h1>
-      //     <h3 id="PKB-vote-percentage">8.68%</h3>
-      //   </div>
-      // </div>
+      /* GENERATE THIS (PKB is used as an example) */
+
+      /*
+      <div class="partai-container">
+         <img id="PKB-icon" class="partai-icon" src="src/assets/img/partai/PKB.png" style="width: 53.5097px;">
+         <div class="vote-description">
+           <h3>PKB</h3>
+           <h1 id="PKB-vote">4,688</h1>
+           <h3 id="PKB-vote-percentage">8.68%</h3>
+         </div>
+      </div>
+      */
+     
       parties.forEach(party => {
         let partyContainer = d3.select("#legislative")
                               .append("div")
@@ -350,30 +351,35 @@ export const mapping = (id, filename) => {
           })
 
       });            
-  
+      
+      // Controls the total votes
       d3.select("#total-votes")
         .text(() => {
           return commaSeparate(validTotal + invalidTotal);
         })
-
+      
+      // Controls the number of valid votes
       d3.select("#valid-votes")
         .text(() => {
           return commaSeparate(validTotal);
         })
 
+      // Controls the number of invalid votes
+      d3.select("#invalid-votes")
+        .text(() => {
+          return commaSeparate(invalidTotal);
+        })
+
+      // Controls the number of valid votes percentage
       d3.select("#valid-votes-percentage")
         .text(() => {
           return `${(validTotal / (validTotal + invalidTotal) * 100).toFixed(2)}%`;
         })
-      
+
+      // Controls the number of invalid votes percentage
       d3.select("#invalid-votes-percentage")
         .text(() => {
           return `${(invalidTotal / (validTotal + invalidTotal) * 100).toFixed(2)}%`;
-        })
-      
-      d3.select("#invalid-votes")
-        .text(() => {
-          return commaSeparate(invalidTotal);
         })
 
       d3.select("#jokomaruf-vote")
@@ -415,9 +421,12 @@ export const mapping = (id, filename) => {
           .attr("d", path)
           .attr("class", "province")
           .attr("id", d => {
+            // Create specific ID for each paths, so it will be easier for the on mouseover event
             return d["properties"]["postal"];
           })
           .style("fill", d => {
+
+            // Check if the total votes for candidate one is greater than candidate two for each province
             if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
               jokomarufWins += 1;
 
@@ -434,6 +443,7 @@ export const mapping = (id, filename) => {
             let tempCandidateOnePercentage = ((d["properties"]["candidateOne"] / tempTotal) * 100).toFixed(2)
             let tempCandidateTwoPercentage = ((d["properties"]["candidateTwo"] / tempTotal) * 100).toFixed(2)
 
+            // Tooltip will appear on mouseover
             tooltip.html(`
               <div class="tooltip">
                 <p style="text-align: center; font-weight: bold; font-size: 14px; padding: 0 0 3px 0;">${d["properties"]["name"].toUpperCase()}</p>
@@ -483,6 +493,8 @@ export const mapping = (id, filename) => {
               .transition()
               .duration(1000)
               .style("fill", d => {
+
+                // Color each province depending on the winning party
                 if (d["properties"]["legMax"] == "PKB") {
                   return "#358469";
                 } else if (d["properties"]["legMax"] == "GER") {
@@ -523,6 +535,7 @@ export const mapping = (id, filename) => {
             svg.selectAll(".province")
               .style("cursor", "pointer")
               .on("click", d=> {
+
 
                 legVoteMax = d["properties"][parties[0]];
                 legVoteMin = d["properties"][parties[0]];
