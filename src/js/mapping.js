@@ -208,15 +208,6 @@ export const mapping = (id, filename) => {
           colorByButtons[2]["domainMin"] = invalidPercentage;
         }
 
-        // Handle KALTARA problem for now
-        if (provinceName == "KALIMANTAN UTARA") {
-          if (candidateOne > candidateTwo) {
-            jokomarufWins += 1;
-          } else {
-            prabowosandiWins += 1;
-          }
-        }
-
         // LEGISLATIVE DATA STARTS HERE
 
         let legislative = {
@@ -246,8 +237,8 @@ export const mapping = (id, filename) => {
 
 
         // Both Kaltara and Luar Negeri don't have any location in the TOPOjson file (needs a better way to handle this)
-        if (i < lengthOfData - 2) {
-          jsonFeatures = topojson.feature(id, id.objects.states_provinces).features;
+        if (i < lengthOfData - 1) {
+          jsonFeatures = topojson.feature(id, id.objects.regions).features;
 
           for (let j = 0; i < jsonFeatures.length; j++) {
 

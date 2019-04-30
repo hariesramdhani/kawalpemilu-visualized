@@ -42,7 +42,7 @@ It can be accessed via `localhost:5500` on your browser
 - [ ] **Regencies/cities visualization**; when the user clicks the province a pop up will appear showing the visualization of the number of votes in cities/regencies of the provinces. [This was how I expected it'd look like](https://twitter.com/Harieesss/status/1119449495584927744)
 - [ ] **Tweak the CSS and Javascript codes**; right now there are tons of redundant lines of codes. It would be nice if it can be cleaned. Especially the CSS on `index.html`. Cleaning the inconsistency of ES6 and ES5 would also be nice.
 - [ ] **Error Handling**; the page doesn't come with a clever error handling so when the API is changed/down the page will show nothing. A pop-up message would be nice.
-- [ ] **Add Kaltara to the main topojson file**; hadn't had the time to do so, the easiest way would be to use GEOjson.io to add it.
+- [x] **Add Kaltara to the main topojson file**; hadn't had the time to do so, the easiest way would be to use GEOjson.io to add it.
 - [ ] **Clever way to translate the map**; at the moment I translated the map X, Y position manually. There must be a clever way to do this.
 - [ ] **Test, test, test**; there are no tests at the moment
 - [x] **Take Color Blindness into account**;
