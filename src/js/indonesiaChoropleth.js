@@ -1,4 +1,4 @@
-export const mapping = (id, filename) => {
+export const indonesiaChoropleth = (id, filename) => {
   let w = 1200,
       h = 400;
 
@@ -455,10 +455,10 @@ export const mapping = (id, filename) => {
 
         // Winning in ..... provinces
         d3.select("#jokomaruf-wins")
-          .text(jokomarufWins)
+          .text(`${jokomarufWins} Provinsi`);
         
         d3.select("#prabowosandi-wins")
-          .text(prabowosandiWins)
+          .text(`${prabowosandiWins} Provinsi`);
           
 
         // THE CODE THAT CONTROLS THE "LEGISLATIF" BUTTON STARTS HERE
@@ -470,10 +470,19 @@ export const mapping = (id, filename) => {
 
             d3.select("#presidential-election")
               .style("background-color", "#DAC6B5");
+
+            d3.select("#foreign-election")
+              .style("background-color", "#DAC6B5");
     
             d3.select("#president")
               .style("display", "none");
 
+            d3.select("#world-choropleth")
+              .style("display", "none");
+            
+            d3.select("#indonesia-choropleth")
+              .style("display", "block");
+              
             d3.select("#color-by")
               .style("display", "none");
     
@@ -599,13 +608,29 @@ export const mapping = (id, filename) => {
         d3.select("#presidential-election")
           .on("click", () => {
 
+            // Winning in ..... provinces
+            d3.select("#jokomaruf-wins")
+            .text(`${jokomarufWins} Provinsi`);
+          
+            d3.select("#prabowosandi-wins")
+            .text(`${prabowosandiWins} Provinsi`);
+
             d3.select("#legislative-election")
               .style("background-color", "#DAC6B5");
 
             d3.select("#presidential-election")
               .style("background-color", "#B3A395");
+
+              d3.select("#foreign-election")
+              .style("background-color", "#DAC6B5");
     
             d3.select("#president")
+              .style("display", "block");
+
+            d3.select("#world-choropleth")
+              .style("display", "none");
+
+            d3.select("#indonesia-choropleth")
               .style("display", "block");
             
             d3.select("#color-by")
