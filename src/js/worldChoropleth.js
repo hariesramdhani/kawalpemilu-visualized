@@ -74,8 +74,6 @@ export const worldChoropleth = (id, filename) => {
         let countryID = data["children"][i][0];
         let countryName = data["children"][i][1];
 
-        console.log(countryName);
-
         // Number of TPS all over the countrys (according to KPU)
         let countryTPSNo = data["children"][i][2];
 
