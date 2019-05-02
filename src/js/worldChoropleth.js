@@ -74,6 +74,8 @@ export const worldChoropleth = (id, filename) => {
         let countryID = data["children"][i][0];
         let countryName = data["children"][i][1];
 
+        console.log(countryName);
+
         // Number of TPS all over the countrys (according to KPU)
         let countryTPSNo = data["children"][i][2];
 
@@ -100,10 +102,10 @@ export const worldChoropleth = (id, filename) => {
         // The amount of votes that is considered invalid
         let invalid = data["data"][countryID]["sum"]["tSah"];
 
-        let exceptions = ["Sabah"];
+        let exceptions = ["sabah"];
 
         // Both Kaltara and Luar Negeri don't have any location in the TOPOjson file (needs a better way to handle this)
-        if (!(exceptions.includes(countryName))) {
+        if (!(exceptions.includes(countryName.toLowerCase()))) {
           jsonFeatures = topojson.feature(id, id.objects.regions).features;
 
 
