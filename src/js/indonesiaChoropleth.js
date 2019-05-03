@@ -535,8 +535,6 @@ export const indonesiaChoropleth = (id, filename) => {
             svg.selectAll(".province")
               .style("cursor", "pointer")
               .on("click", d=> {
-
-
                 legVoteMax = d["properties"][parties[0]];
                 legVoteMin = d["properties"][parties[0]];
 
@@ -721,7 +719,6 @@ export const indonesiaChoropleth = (id, filename) => {
 
                 svg.selectAll(".province")
                   .on("mouseover", d => {
-          
                     tooltip.html(`
                       <div class="tooltip">
                         <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>

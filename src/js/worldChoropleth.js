@@ -177,22 +177,27 @@ export const worldChoropleth = (id, filename) => {
         let tempCandidateTwoPercentage = ((d["properties"]["candidateTwo"] / tempTotal) * 100).toFixed(2)
 
         // Tooltip will appear on mouseover
-        tooltip.html(`
-          <div class="tooltip">
-            <p style="text-align: center; font-weight: bold; font-size: 14px; padding: 0 0 3px 0;">${d["properties"]["NAME"].toUpperCase()}</p>
-            <p><span style="font-size: 18px; font-weight: bold; float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="font-size: 18px; font-weight: bold; float: right; color: #597EA1;">${tempCandidateTwoPercentage}%</span></p><br/>
-            
-          </div>
-        `)
+        if (d["properties"]["candidateOne"] != undefined) {
+          tooltip.html(`
+            <div class="tooltip">
+              <p style="text-align: center; font-weight: bold; font-size: 14px; padding: 0 0 3px 0;">${d["properties"]["NAME"].toUpperCase()}</p>
+              <p><span style="font-size: 18px; font-weight: bold; float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="font-size: 18px; font-weight: bold; float: right; color: #597EA1;">${tempCandidateTwoPercentage}%</span></p><br/>
+              
+            </div>
+          `)
 
-        tooltip.style("visibility", "visible");
+          tooltip.style("visibility", "visible");
+        }
       })
       .on("mouseout", () => {
           tooltip.style("visibility", "hidden");
       })
-      .on("mousemove", () => {
-          tooltip.style("top", `${d3.event.clientY - 90}px`)
+      .on("mousemove", (d) => {
+          if (d["properties"]["candidateOne"] != undefined) {
+            tooltip.style("top", `${d3.event.clientY - 90}px`)
                   .style("left", `${d3.event.clientX - 80}px`);    
+          }
+          
       })
       
       d3.select("#foreign-election")
