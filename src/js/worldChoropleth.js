@@ -63,6 +63,8 @@ export const worldChoropleth = (id, filename) => {
     
     lengthOfData = data["children"].length;
 
+    let countryData = {}
+
     d3.json(filename, (error, id) => {
 
       if (error) {
@@ -74,19 +76,7 @@ export const worldChoropleth = (id, filename) => {
         let countryID = data["children"][i][0];
         let countryName = data["children"][i][1];
 
-        // Number of TPS all over the countrys (according to KPU)
-        let countryTPSNo = data["children"][i][2];
-
         // ELECTION RESULT DATA STARTS HERE
-
-        // Received TPS data including the number of unprocessed ones
-        let receivedTPS = data["data"][countryID]["sum"]["cakupan"];
-
-        // Unprocessed TPS
-        let unprocessedTPS = data["data"][countryID]["sum"]["pending"];
-
-        // Error TPS
-        let errorTPS = data["data"][countryID]["sum"]["error"];
 
         // The amount of votes that the 1st candidate received
         let candidateOne = data["data"][countryID]["sum"]["pas1"];
@@ -94,13 +84,17 @@ export const worldChoropleth = (id, filename) => {
         // The amount of votes that the 2nd candidate received
         let candidateTwo = data["data"][countryID]["sum"]["pas2"];
 
-        // The amount of votes that is considered valid
-        let valid = data["data"][countryID]["sum"]["sah"];
-
-        // The amount of votes that is considered invalid
-        let invalid = data["data"][countryID]["sum"]["tSah"];
-
         let exceptions = ["sabah"];
+
+
+        if (!(countryName in countryData)) {
+          countryData[countryName] = {};
+          countryData[countryName]["candidateOne"] = candidateOne;
+          countryData[countryName]["candidateTwo"] = candidateTwo;
+        } else {
+          countryData[countryName]["candidateOne"] += candidateOne;
+          countryData[countryName]["candidateTwo"] += candidateTwo;
+        }
 
         // Both Kaltara and Luar Negeri don't have any location in the TOPOjson file (needs a better way to handle this)
         if (!(exceptions.includes(countryName.toLowerCase()))) {
@@ -121,21 +115,9 @@ export const worldChoropleth = (id, filename) => {
 
               jsonFeatures[j]["properties"]["countryID"] = countryID;
 
-              jsonFeatures[j]["properties"]["countryTPSNo"] = countryTPSNo;
+              jsonFeatures[j]["properties"]["candidateOne"] = countryData[countryName]["candidateOne"];
 
-              jsonFeatures[j]["properties"]["receivedTPS"] = receivedTPS;
-
-              jsonFeatures[j]["properties"]["unprocessedTPS"] = unprocessedTPS;
-
-              jsonFeatures[j]["properties"]["errorTPS"] = errorTPS;
-
-              jsonFeatures[j]["properties"]["candidateOne"] = candidateOne;
-
-              jsonFeatures[j]["properties"]["candidateTwo"] = candidateTwo;
-
-              jsonFeatures[j]["properties"]["valid"] = valid;
-
-              jsonFeatures[j]["properties"]["invalid"] = invalid;
+              jsonFeatures[j]["properties"]["candidateTwo"] = countryData[countryName]["candidateTwo"];
 
               // jsonFeatures[j]["properties"]["totalVotes"] = totalVotes;
 
@@ -181,8 +163,9 @@ export const worldChoropleth = (id, filename) => {
           tooltip.html(`
             <div class="tooltip">
               <p style="text-align: center; font-weight: bold; font-size: 14px; padding: 0 0 3px 0;">${d["properties"]["NAME"].toUpperCase()}</p>
-              <p><span style="font-size: 18px; font-weight: bold; float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="font-size: 18px; font-weight: bold; float: right; color: #597EA1;">${tempCandidateTwoPercentage}%</span></p><br/>
-              
+              <p><span style="font-size: 18px; font-weight: bold; float: left; color: #AC0B13;">${tempCandidateOnePercentage}%</span> <span style="font-size: 18px; font-weight: bold; float: right; color: #597EA1;">${tempCandidateTwoPercentage}%</span></p>
+              <br/>
+              <p style="padding: 0 2px 3px 2px; clear: both;"><span style="float: left; color: #AC0B13;">${commaSeparate(d["properties"]["candidateOne"])}</span> <span style="float: right; color: #597EA1;">${commaSeparate(d["properties"]["candidateTwo"])}</span></p><br/>
             </div>
           `)
 
@@ -194,7 +177,7 @@ export const worldChoropleth = (id, filename) => {
       })
       .on("mousemove", (d) => {
           if (d["properties"]["candidateOne"] != undefined) {
-            tooltip.style("top", `${d3.event.clientY - 90}px`)
+            tooltip.style("top", `${d3.event.clientY - 100}px`)
                   .style("left", `${d3.event.clientX - 80}px`);    
           }
           
