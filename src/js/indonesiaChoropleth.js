@@ -215,7 +215,7 @@ export const indonesiaChoropleth = (id, filename) => {
         }
 
         parties.forEach(party => {
-          
+
           // PKS key in the API is 'sej' that's why
           if (party == "PKS") {
             legislative[party] = data["data"][provinceID]["sum"]["sej"];  
@@ -225,13 +225,17 @@ export const indonesiaChoropleth = (id, filename) => {
 
           if (legislative[party] != undefined) {
             legislativeTotal[party] += legislative[party];  
+          } else {
+            legislative[party] = 0;
           }
+
+          
         })
 
         let legMax = Object.keys(legislative).reduce((a, b) => legislative[a] > legislative[b] ? a : b);
         
         // Without this the map color will look like the color of the last party in the list
-        if (legislative[legMax] == undefined) {
+        if (legislative[legMax] == 0) {
           legMax = "NONE";
         }
 
