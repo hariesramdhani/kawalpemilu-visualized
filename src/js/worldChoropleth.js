@@ -100,10 +100,11 @@ export const worldChoropleth = (id, filename) => {
 
         // Exception, add the sum to Malaysia;
         if (countryName == "Sabah") {
-          countryData["Malaysia"]["candidateOne"] += candidateOne;
-          countryData["Malaysia"]["candidateTwo"] += candidateTwo;
+          if (candidateOne != undefined) {
+            countryData["Malaysia"]["candidateOne"] += candidateOne;
+            countryData["Malaysia"]["candidateTwo"] += candidateTwo;
+          }
         }
-        
 
         // Both Kaltara and Luar Negeri don't have any location in the TOPOjson file (needs a better way to handle this)
         if (!(exceptions.includes(countryName.toLowerCase()))) {
