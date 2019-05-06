@@ -240,7 +240,7 @@ export const indonesiaChoropleth = (id, filename) => {
         }
 
 
-        // Both Kaltara and Luar Negeri don't have any location in the TOPOjson file (needs a better way to handle this)
+        // Luar Negeri doesn't have any location in the TOPOjson file (needs a better way to handle this)
         if (i < lengthOfData - 1) {
           jsonFeatures = topojson.feature(id, id.objects.regions).features;
 
@@ -466,17 +466,20 @@ export const indonesiaChoropleth = (id, filename) => {
           
 
         // THE CODE THAT CONTROLS THE "LEGISLATIF" BUTTON STARTS HERE
-        d3.select("#legislative-election")
+        d3.select("#legislative-election-dom")
           .on("click", () => {
 
-            d3.select("#legislative-election")
-              .style("background-color", "#B3A395");
+            d3.select("#legislative-election-dom")
+              .style("background-color", "#AEAE8C");
 
-            d3.select("#presidential-election")
-              .style("background-color", "#DAC6B5");
+            d3.select("#legislative-election-overseas")
+              .style("background-color", "#D4D4AA");
 
-            d3.select("#foreign-election")
-              .style("background-color", "#DAC6B5");
+            d3.select("#presidential-election-dom")
+              .style("background-color", "#BAD4AA");
+
+            d3.select("#presidential-election-overseas")
+              .style("background-color", "#BAD4AA");
     
             d3.select("#president")
               .style("display", "none");
@@ -607,7 +610,7 @@ export const indonesiaChoropleth = (id, filename) => {
           })
 
         // THE CODE THAT CONTROLS THE "PRESIDEN" BUTTON STARTS HERE
-        d3.select("#presidential-election")
+        d3.select("#presidential-election-dom")
           .on("click", () => {
 
             // Winning in ..... provinces
@@ -617,14 +620,17 @@ export const indonesiaChoropleth = (id, filename) => {
             d3.select("#prabowosandi-wins")
             .text(`${prabowosandiWins} Provinsi`);
 
-            d3.select("#legislative-election")
-              .style("background-color", "#DAC6B5");
+            d3.select("#legislative-election-dom")
+              .style("background-color", "#D4D4AA");
 
-            d3.select("#presidential-election")
-              .style("background-color", "#B3A395");
+            d3.select("#legislative-election-overseas")
+              .style("background-color", "#D4D4AA");
 
-              d3.select("#foreign-election")
-              .style("background-color", "#DAC6B5");
+            d3.select("#presidential-election-dom")
+              .style("background-color", "#99AE8C");
+
+              d3.select("#presidential-election-overseas")
+              .style("background-color", "#BAD4AA");
     
             d3.select("#president")
               .style("display", "block");

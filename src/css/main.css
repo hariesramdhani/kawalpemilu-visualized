@@ -116,11 +116,11 @@ a {
 
 .button {
     display: inline-block;
-    padding: 10px 30px;
+    padding: 5px 30px;
     margin: 0 10px;
     font-size: 20px;
     background-color: #DAC6B5;
-    border: 3px solid black;
+    border: 2px solid black;
     border-radius: 10px;
     cursor: pointer;
 }
@@ -139,4 +139,16 @@ a {
     margin: 0 8px;
     border: 2px solid black;
     cursor: pointer;
+}
+
+.button:hover, .color-by-button:hover {
+    transform: scale(1.05);
+}
+
+.president-color {
+    background-color: #BAD4AA;
+}
+
+.legislative-color {
+    background-color: #D4D4AA;
 }
