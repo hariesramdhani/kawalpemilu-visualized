@@ -298,10 +298,8 @@ export const worldChoropleth = (id, filename) => {
 
               // Check if the total votes for candidate one is greater than candidate two for each province
               if (d["properties"]["candidateOne"] > d["properties"]["candidateTwo"]) {
-                jokomarufWins += 1;
                 return candidateOneColor(d["properties"]["candidateOne"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]));
               } else if (d["properties"]["candidateOne"] < d["properties"]["candidateTwo"]) {
-                prabowosandiWins += 1;
                 return candidateTwoColor(d["properties"]["candidateTwo"]/ (d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]))
               } else {
                 return "none";
