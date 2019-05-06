@@ -453,7 +453,7 @@ export const indonesiaChoropleth = (id, filename) => {
               tooltip.style("visibility", "hidden");
           })
           .on("mousemove", () => {
-              tooltip.style("top", `${d3.event.clientY - 90}px`)
+              tooltip.style("top", `${d3.event.clientY - 100}px`)
                       .style("left", `${d3.event.clientX - 80}px`);    
           })
 
@@ -678,7 +678,7 @@ export const indonesiaChoropleth = (id, filename) => {
                 tooltip.style("visibility", "visible");
               })
               .on("mousemove", () => {
-                tooltip.style("top", `${d3.event.clientY - 90}px`)
+                tooltip.style("top", `${d3.event.clientY - 100}px`)
                         .style("left", `${d3.event.clientX - 80}px`);    
               })
             
