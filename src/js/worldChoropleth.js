@@ -272,6 +272,9 @@ export const worldChoropleth = (id, filename) => {
 
           d3.select("#legislative-election-dom")
             .style("background-color", "#D4D4AA");
+
+          d3.select("#legislative-election-overseas")
+            .style("background-color", "#D4D4AA");
   
           d3.select("#president")
             .style("display", "block");
