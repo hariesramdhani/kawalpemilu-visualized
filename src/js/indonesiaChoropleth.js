@@ -660,6 +660,7 @@ export const indonesiaChoropleth = (id, filename) => {
               })
 
             svg.selectAll(".province")
+              .style("cursor", "default")
               .on("mouseover", d => {
 
                 let tempTotal = d["properties"]["candidateOne"] + d["properties"]["candidateTwo"]
