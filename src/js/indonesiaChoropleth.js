@@ -540,67 +540,76 @@ export const indonesiaChoropleth = (id, filename) => {
               })
 
             svg.selectAll(".province")
-              .style("cursor", "pointer")
-              .on("click", d=> {
-                legVoteMax = d["properties"][parties[0]];
-                legVoteMin = d["properties"][parties[0]];
-
-                legislativeTotalSum = d["properties"][parties[0]];
-                
-                for (let i = 1; i < parties.length; i++) {
-                  if (d["properties"][parties[i]] != undefined) {
-                    legislativeTotalSum += d["properties"][parties[i]];
-                  }
-
-                  if (d["properties"][parties[i]] > legVoteMax) {
-                    legVoteMax = d["properties"][parties[i]];
-                  } else if (d["properties"][parties[i]] < legVoteMin) {
-                    legVoteMin = d["properties"][parties[i]];
-                  }
+              .style("cursor", d => {
+                if (d["properties"]["legMax"] != "NONE" && d["properties"]["legMax"] != undefined) {
+                  return "pointer"
+                } else {
+                  return "default"
                 }
+              })
+              .on("click", d=> {
+                if (d["properties"]["legMax"] != "NONE" && d["properties"]["legMax"] != undefined) {
+                  legVoteMax = d["properties"][parties[0]];
+                  legVoteMin = d["properties"][parties[0]];
+
+                  legislativeTotalSum = d["properties"][parties[0]];
+                  
+                  for (let i = 1; i < parties.length; i++) {
+                    if (d["properties"][parties[i]] != undefined) {
+                      legislativeTotalSum += d["properties"][parties[i]];
+                    }
+
+                    if (d["properties"][parties[i]] > legVoteMax) {
+                      legVoteMax = d["properties"][parties[i]];
+                    } else if (d["properties"][parties[i]] < legVoteMin) {
+                      legVoteMin = d["properties"][parties[i]];
+                    }
+                  }
 
 
-                legVotePowScale = d3.scalePow()
-                                    .domain([legVoteMin, legVoteMax])
-                                    .range([40, 80]);
+                  legVotePowScale = d3.scalePow()
+                                      .domain([legVoteMin, legVoteMax])
+                                      .range([40, 80]);
 
-                parties.forEach(party => {
-                  d3.select(`#${party}-vote`)
-                    .transition(1000)
-                    .text(() => {
-                    
-                      if (d["properties"][party] != undefined) {
-                        return commaSeparate(d["properties"][party]);
-                      } else {
-                        return 0;
-                      }
-                    })
+                  parties.forEach(party => {
+                    d3.select(`#${party}-vote`)
+                      .transition(1000)
+                      .text(() => {
+                      
+                        if (d["properties"][party] != undefined) {
+                          return commaSeparate(d["properties"][party]);
+                        } else {
+                          return 0;
+                        }
+                      })
 
-                  d3.select(`#${party}-icon`)
-                    .transition(2000)
-                    .style("width", () => {
-                      return legVotePowScale(d["properties"][party]) + "px";
-                    })
+                    d3.select(`#${party}-icon`)
+                      .transition(2000)
+                      .style("width", () => {
+                        return legVotePowScale(d["properties"][party]) + "px";
+                      })
 
-                  d3.select(`#${party}-vote-percentage`)
-                    .text(() => {
-                      if (d["properties"][party] != undefined) {
-                        return `${(d["properties"][party]/legislativeTotalSum * 100).toFixed(2)}%`;
-                      } else {
-                        return 0;
-                      }
-                    })
-                });
-
+                    d3.select(`#${party}-vote-percentage`)
+                      .text(() => {
+                        if (d["properties"][party] != undefined) {
+                          return `${(d["properties"][party]/legislativeTotalSum * 100).toFixed(2)}%`;
+                        } else {
+                          return 0;
+                        }
+                      })
+                  });
+                }
               })
               .on("mouseover", d => {
-                tooltip.html(`
-                  <div class="tooltip">
-                    <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
-                  </div>
-                `);
+                if (d["properties"]["legMax"] != "NONE" && d["properties"]["legMax"] != undefined) {
+                  tooltip.html(`
+                    <div class="tooltip">
+                      <p style="text-align: center; font-weight: bold; font-size: 14px;">${d["properties"]["name"].toUpperCase()}</p>
+                    </div>
+                  `);
 
-                tooltip.style("visibility", "visible");
+                  tooltip.style("visibility", "visible");
+                }
               })
               .on("mousemove", () => {
                 tooltip.style("top", `${d3.event.clientY - 60}px`)
