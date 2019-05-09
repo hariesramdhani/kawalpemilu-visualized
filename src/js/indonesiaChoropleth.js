@@ -334,16 +334,17 @@ export const indonesiaChoropleth = (id, filename) => {
           .text(`${party}`)
         
         partyVoteDescription.append("h1")
-          .attr("id", `${party}-vote`)
-          .text(() => {
-            return commaSeparate(legislativeTotal[party]);
-          })
-        
-        partyVoteDescription.append("h3")
           .attr("id", `${party}-vote-percentage`)
           .text(() => {
             return `${(legislativeTotal[party]/legislativeTotalSum * 100).toFixed(2)}%`;
           })
+
+        partyVoteDescription.append("h3")
+          .attr("id", `${party}-vote`)
+          .text(() => {
+            return `(${commaSeparate(legislativeTotal[party])})`;
+          })
+          .style("font-weight", "normal");
 
       });            
       
@@ -356,13 +357,13 @@ export const indonesiaChoropleth = (id, filename) => {
       // Controls the number of valid votes
       d3.select("#valid-votes")
         .text(() => {
-          return commaSeparate(validTotal);
+          return `(${commaSeparate(validTotal)})`;
         })
 
       // Controls the number of invalid votes
       d3.select("#invalid-votes")
         .text(() => {
-          return commaSeparate(invalidTotal);
+          return `(${commaSeparate(invalidTotal)})`;
         })
 
       // Controls the number of valid votes percentage
@@ -584,7 +585,7 @@ export const indonesiaChoropleth = (id, filename) => {
                       })
 
                     d3.select(`#${party}-icon`)
-                      .transition(2000)
+                      .transition(5000)
                       .style("width", () => {
                         return legVotePowScale(d["properties"][party]) + "px";
                       })
